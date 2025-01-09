@@ -1,0 +1,35 @@
+{
+	"name": "@eetann/vscode-markdown-language-client",
+	"version": "1.0.0",
+	"description": "",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"watch": "tsc --watch",
+		"build": "tsc",
+		"format": "biome format",
+		"lint": "biome lint"
+	},
+	"activationEvents": [
+		"onLanguage:markdown"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "markdown",
+				"extensions": [
+					".md"
+				]
+			}
+		]
+	},
+	"keywords": [],
+	"author": "eetann",
+	"license": "MIT",
+	"dependencies": {
+		"@eetann/markdown-language-server": "link:../server",
+		"@types/vscode": "^1.96.0",
+		"@volar/language-server": "^2.4.11",
+		"@volar/vscode": "^2.4.11",
+		"vscode-languageclient": "^9.0.1"
+	}
+}

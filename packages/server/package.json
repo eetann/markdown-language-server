@@ -1,0 +1,19 @@
+{
+	"name": "@eetann/markdown-language-server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"bin": {
+		"markdown-language-server": "./bin/markdown-language-server.js"
+	},
+	"scripts": {
+		"watch": "vite build --watch",
+		"build": "tsc --noEmit && vite build",
+		"test": "vitest",
+		"format": "biome format",
+		"lint": "biome lint"
+	},
+	"keywords": [],
+	"author": "eetann",
+	"license": "MIT"
+}
