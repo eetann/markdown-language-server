@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "module": "nodenext"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
