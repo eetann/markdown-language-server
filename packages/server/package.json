@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"type": "module",
 	"bin": {
-		"markdown-language-server": "./bin/markdown-language-server.js"
+		"markdown-language-server": "./bin/markdown-language-server.cjs"
 	},
 	"scripts": {
 		"watch": "vite build --watch",

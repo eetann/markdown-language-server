@@ -1,13 +1,17 @@
+import type { CompileResults, VFileWithOutput } from "node_modules/unified/lib";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
-import { type Processor, unified } from "unified";
-
-const parser = unified().use(remarkParse).use(remarkGfm);
+import { unified } from "unified";
 
 export class MarkdownParser {
-	private nodes: ReturnType<Processor["parse"]>;
+	private nodes: VFileWithOutput<CompileResults>;
 	constructor(text: string) {
-		this.nodes = parser.parse(text);
+		(async () => {
+			this.nodes = await unified()
+				.use(remarkParse)
+				.use(remarkGfm)
+				.process(text);
+		})();
 	}
 
 	getNodes() {
