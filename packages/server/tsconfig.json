@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "outDir": "dist",
+    "types": [
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "src"
+  ]
+}

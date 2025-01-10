@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"type": "module",
 	"bin": {
 		"markdown-language-server": "./bin/markdown-language-server.js"
 	},
@@ -15,5 +16,21 @@
 	},
 	"keywords": [],
 	"author": "eetann",
-	"license": "MIT"
+	"license": "MIT",
+	"devDependencies": {
+		"esbuild": "0.24.2",
+		"vite": "^6.0.7",
+		"vite-plugin-node": "^4.0.0",
+		"vitest": "^2.1.8"
+	},
+	"dependencies": {
+		"@volar/language-core": "^2.4.11",
+		"@volar/language-server": "^2.4.11",
+		"@volar/language-service": "^2.4.11",
+		"remark": "^15.0.1",
+		"remark-gfm": "^4.0.0",
+		"remark-parse": "^11.0.0",
+		"unified": "^11.0.5",
+		"vscode-uri": "^3.0.8"
+	}
 }
