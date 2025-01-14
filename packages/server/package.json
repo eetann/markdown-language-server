@@ -18,12 +18,15 @@
 	"author": "eetann",
 	"license": "MIT",
 	"devDependencies": {
+		"@bufbuild/buf": "^1.49.0",
+		"@bufbuild/protoc-gen-es": "^2.2.3",
 		"esbuild": "0.24.2",
 		"vite": "^6.0.7",
 		"vite-plugin-node": "^4.0.0",
 		"vitest": "^2.1.8"
 	},
 	"dependencies": {
+		"@bufbuild/protobuf": "^2.2.3",
 		"@volar/language-core": "^2.4.11",
 		"@volar/language-server": "^2.4.11",
 		"@volar/language-service": "^2.4.11",
