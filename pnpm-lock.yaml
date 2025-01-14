@@ -54,6 +54,9 @@ importers:
       '@bufbuild/protoc-gen-es':
         specifier: ^2.2.3
         version: 2.2.3(@bufbuild/protobuf@2.2.3)
+      '@types/mdast':
+        specifier: ^4.0.4
+        version: 4.0.4
       esbuild:
         specifier: 0.24.2
         version: 0.24.2

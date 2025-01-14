@@ -24,7 +24,15 @@ message Index {
   // Metadata about this index.
   Metadata metadata = 1;
   // Documents that belong to this index.
-  repeated Document documents = 2;
+  // key is relative path.
+  // 1. The path must be relative to the directory supplied in the associated
+  //    `Metadata.project_root`.
+  // 2. The path must not begin with a leading '/'.
+  // 3. The path must point to a regular file, not a symbolic link.
+  // 4. The path must use '/' as the separator, including on Windows.
+  // 5. The path must be canonical; it cannot include empty components ('//'),
+  //    or '.' or '..'.
+  map<string, Document> documents = 2;
   // (optional) Symbols that are referenced from this index but are defined in
   // an external package (a separate `Index` message). Leave this field empty
   // if you assume the external package will get indexed separately. If the
@@ -76,16 +84,7 @@ message Document {
   // This field is typed as a string to permit any programming language, including
   // ones that are not specified by the `Language` enum.
   string language = 4;
-  // (Required) Unique path to the text document.
-  //
-  // 1. The path must be relative to the directory supplied in the associated
-  //    `Metadata.project_root`.
-  // 2. The path must not begin with a leading '/'.
-  // 3. The path must point to a regular file, not a symbolic link.
-  // 4. The path must use '/' as the separator, including on Windows.
-  // 5. The path must be canonical; it cannot include empty components ('//'),
-  //    or '.' or '..'.
-  string relative_path = 1;
+
   // Occurrences that appear in this file.
   repeated Occurrence occurrences = 2;
   // Symbols that are "defined" within this document.
