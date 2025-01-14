@@ -4,17 +4,9 @@ import remarkParse from "remark-parse";
 import { unified } from "unified";
 
 export class MarkdownParser {
-	private nodes: VFileWithOutput<CompileResults>;
-	constructor(text: string) {
-		(async () => {
-			this.nodes = await unified()
-				.use(remarkParse)
-				.use(remarkGfm)
-				.process(text);
-		})();
-	}
+	// private nodes: VFileWithOutput<CompileResults> | undefined = undefined;
 
-	getNodes() {
-		return this.nodes;
+	async parse(text: string) {
+		return await unified().use(remarkParse).use(remarkGfm).process(text);
 	}
 }
