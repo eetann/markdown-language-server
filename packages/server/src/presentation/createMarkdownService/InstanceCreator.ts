@@ -1,3 +1,4 @@
+import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import {
 	type Connection,
 	DidChangeWatchedFilesNotification,
@@ -17,7 +18,10 @@ export class InstanceCreator {
 		_context: LanguageServiceContext,
 	): LanguageServicePluginInstance => {
 		this.initialize();
-		return {};
+		return {
+			provideCompletionItems: (...args) =>
+				new ProvideCompletionItemsUseCase().execute(...args),
+		};
 	};
 
 	async initialize() {
