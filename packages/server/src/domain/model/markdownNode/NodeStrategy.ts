@@ -6,10 +6,17 @@ import {
 	SymbolInformationSchema,
 } from "@/domain/model/scip_pb";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
-import type { Node, Parent } from "mdast";
+import type { Node } from "mdast";
 import type { SymbolCreator } from "../SymbolCreator";
 
-export type AbstractNode = Node & { symbol?: string; children?: Node[] };
+declare module "mdast" {
+	interface Node {
+		children?: Node[];
+		symbol?: string;
+	}
+}
+
+export type AbstractNode = Node;
 
 export function createSymbolInformation(
 	symbol: MessageInitShape<typeof SymbolInformationSchema>,

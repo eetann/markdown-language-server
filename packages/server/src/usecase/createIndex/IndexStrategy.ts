@@ -1,4 +1,5 @@
 import type { SymbolCreator } from "@/domain/model/SymbolCreator";
+import { HeadingStrategy } from "@/domain/model/markdownNode/HeadingStrategy";
 import {
 	type AbstractNode,
 	NodeStrategy,
@@ -26,7 +27,7 @@ export class IndexStrategy extends NodeStrategy {
 		);
 		this.strategies.set(
 			"heading",
-			new NodeStrategy(index, relativePath, symbolCreator),
+			new HeadingStrategy(index, relativePath, symbolCreator),
 		);
 	}
 

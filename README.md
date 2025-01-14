@@ -48,10 +48,3 @@ cd packages/vscode
 pnpm run build
 ```
 このリポジトリをVSCodeで開いて、debug and runから`Launch Extension`。
-
-### TODO
-
-- [x] VSCodeで開くリポジトリをsampleに変更
-- [ ] 生意気な見出しを注意するサンプルのdiagnosticを追加
-- [ ] 補完のサンプルを追加
-- [ ] indexerの実装

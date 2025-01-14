@@ -6,9 +6,12 @@ describe("CreateIndexUseCase", () => {
 		const workspaceFolder = path.resolve("../sample/");
 		const index = new CreateIndexUseCase().execute(workspaceFolder);
 
-		const prefix = "markdown-language-server . . .";
-		const sampleDocument = index.documents["grammar.md"];
-		expect(sampleDocument).not.toBeUndefined();
-		// expect(sampleDocument.symbols).toHaveProperty(symbol);
+		const grammarDocument = index.documents["grammar.md"];
+		expect(grammarDocument).not.toBeUndefined();
+		expect(grammarDocument.occurrences.length).not.toBe(0);
+
+		const linksDocument = index.documents["links.md"];
+		expect(linksDocument).not.toBeUndefined();
+		expect(linksDocument.occurrences.length).toBe(3);
 	});
 });

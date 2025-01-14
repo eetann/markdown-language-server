@@ -13,8 +13,6 @@ export class SymbolCreator {
 	// <package> ::= <manager> ' ' <package-name> ' ' <version>
 	private package = ". . .";
 	private _filename: string;
-	private _namespace = "";
-	private _local_id = 1;
 	constructor(filename: string) {
 		this._filename = escapedIdentifier(filename);
 	}
@@ -23,34 +21,7 @@ export class SymbolCreator {
 		return `${this.scheme} ${this.package} ${this._filename}/`;
 	}
 
-	get namespace() {
-		if (this._namespace !== "") {
-			return this._namespace;
-		}
-		return this.filename;
-	}
-
-	createNamespace(namespace: string) {
-		this._namespace = `${this.scheme} ${this.package} ${escapedIdentifier(namespace)}/`;
-		return this._namespace;
-	}
-
-	createType(type: string) {
-		return `${this.namespace}${escapedIdentifier(type)}#`;
-	}
-	createTerm(parentSymbol: string, term: string) {
-		return `${parentSymbol}${escapedIdentifier(term)}.`;
-	}
-
-	createMethod(parentSymbol: string, method: string) {
-		return `${parentSymbol}${escapedIdentifier(method)}().`;
-	}
-
-	createIdentifier(identifier: string) {
-		return `${this.namespace}${escapedIdentifier(identifier)}#`;
-	}
-
-	createLocalId() {
-		return `local ${this._local_id++}`;
+	createNamespace(parentSymbol: string, namespace: string) {
+		return `${parentSymbol}${escapedIdentifier(namespace)}/`;
 	}
 }
