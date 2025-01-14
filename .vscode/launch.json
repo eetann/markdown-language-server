@@ -7,6 +7,8 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
+				"${workspaceFolder}/packages/sample/",
+				"${workspaceFolder}/packages/sample/links.md",
 				"--disable-updates",
 				"--disable-workspace-trust",
 				"--skip-release-notes",

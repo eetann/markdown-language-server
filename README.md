@@ -51,7 +51,7 @@ pnpm run build
 
 ### TODO
 
-- [ ] VSCodeで開くリポジトリをsampleに変更
+- [x] VSCodeで開くリポジトリをsampleに変更
 - [ ] 生意気な見出しを注意するサンプルのdiagnosticを追加
 - [ ] 補完のサンプルを追加
 - [ ] indexerの実装
