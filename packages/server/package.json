@@ -21,6 +21,7 @@
 		"@bufbuild/buf": "^1.49.0",
 		"@bufbuild/protoc-gen-es": "^2.2.3",
 		"@types/mdast": "^4.0.4",
+		"@types/unist": "^3.0.3",
 		"esbuild": "0.24.2",
 		"vite": "^6.0.7",
 		"vite-plugin-node": "^4.0.0",

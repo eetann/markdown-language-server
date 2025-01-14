@@ -6,12 +6,10 @@ import {
 	SymbolInformationSchema,
 } from "@/domain/model/scip_pb";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
-import type { Node as UnifiedNode } from "node_modules/unified/lib";
+import type { Node, Parent } from "mdast";
 import type { SymbolCreator } from "../SymbolCreator";
 
-export interface AbstractNode extends UnifiedNode {
-	symbol?: string;
-}
+export type AbstractNode = Node & { symbol?: string; children?: Node[] };
 
 export function createSymbolInformation(
 	symbol: MessageInitShape<typeof SymbolInformationSchema>,
@@ -64,10 +62,6 @@ export class NodeStrategy {
 	}
 	onEnter(node: AbstractNode, parentSymbol: string): void {
 		node.symbol = this.getSymbol(node, parentSymbol);
-	}
-
-	getChildren(_node: AbstractNode): AbstractNode[] {
-		return [];
 	}
 
 	getType(_node: AbstractNode): string {

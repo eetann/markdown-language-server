@@ -29,15 +29,14 @@ export function getPaths(
 export function traverseForIndex(
 	node: AbstractNode,
 	parentSymbol: string,
-	getChildren: (node: AbstractNode) => AbstractNode[],
 	onEnter?: (node: AbstractNode, parentSymbol: string) => void,
 	onLeave?: (node: AbstractNode) => void,
 ) {
 	if (typeof onEnter !== "undefined") {
 		onEnter(node, parentSymbol);
 	}
-	for (const child of getChildren(node)) {
-		traverseForIndex(child, node.symbol, getChildren, onEnter, onLeave);
+	for (const child of node.children ?? []) {
+		traverseForIndex(child, node.symbol, onEnter, onLeave);
 	}
 	if (typeof onLeave !== "undefined") {
 		onLeave(node);
@@ -63,13 +62,7 @@ export class Indexer {
 			const rootNode = new MarkdownParser().execute(content);
 			const symbolCreator = new SymbolCreator(relativePath);
 			const strategy = new IndexStrategy(index, relativePath, symbolCreator);
-			traverseForIndex(
-				rootNode,
-				"",
-				strategy.getChildren,
-				strategy.onEnter,
-				strategy.onLeave,
-			);
+			traverseForIndex(rootNode, "", strategy.onEnter, strategy.onLeave);
 		} catch (error) {
 			console.error(error);
 		}

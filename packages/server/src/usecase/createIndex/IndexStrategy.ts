@@ -35,10 +35,6 @@ export class IndexStrategy extends NodeStrategy {
 		this.strategies.get(node.type)?.onEnter(node, parentSymbol);
 	};
 
-	getChildren = (node: AbstractNode) => {
-		return this.strategies.get(node.type)?.getChildren(node) ?? [];
-	};
-
 	onLeave = (node: AbstractNode) => {
 		this.strategies.get(node.type)?.onLeave(node);
 	};
