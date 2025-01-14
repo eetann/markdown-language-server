@@ -8,10 +8,10 @@ describe("CreateIndexUseCase", () => {
 
 		const grammarDocument = index.documents["grammar.md"];
 		expect(grammarDocument).not.toBeUndefined();
-		expect(grammarDocument.occurrences.length).not.toBe(0);
+		expect(grammarDocument.headings.length).not.toBe(0);
 
 		const linksDocument = index.documents["links.md"];
 		expect(linksDocument).not.toBeUndefined();
-		expect(linksDocument.occurrences.length).toBe(3);
+		expect(linksDocument.headings.length).toBe(3);
 	});
 });

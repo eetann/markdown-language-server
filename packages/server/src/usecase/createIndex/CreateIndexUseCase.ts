@@ -1,16 +1,14 @@
 import { readdirSync } from "node:fs";
 import path from "node:path";
-import { type Index, IndexSchema } from "@/domain/model/scip_pb";
-import { create } from "@bufbuild/protobuf";
+import type { Index } from "@/domain/model/IndexType";
 import { Indexer } from "./Indexer";
 
 export class CreateIndexUseCase {
 	execute(workspaceFolder: string): Index {
-		const index = create(IndexSchema, {
-			metadata: {
-				projectRoot: workspaceFolder,
-			},
-		});
+		const index: Index = {
+			workspaceFolder,
+			documents: {},
+		};
 
 		const entries = readdirSync(path.join(workspaceFolder), {
 			recursive: true,

@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import type { Index } from "@/domain/model/IndexType";
 import { SymbolCreator } from "@/domain/model/SymbolCreator";
 import type { AbstractNode } from "@/domain/model/markdownNode/NodeStrategy";
-import type { Index } from "@/domain/model/scip_pb";
 import { MarkdownParser } from "@/infrastructure/markdownParser/MarkdownParser";
 import { IndexStrategy } from "./IndexStrategy";
 
@@ -28,15 +28,14 @@ export function getPaths(
 
 export function traverseForIndex(
 	node: AbstractNode,
-	parentSymbol: string,
-	onEnter?: (node: AbstractNode, parentSymbol: string) => void,
+	onEnter?: (node: AbstractNode) => void,
 	onLeave?: (node: AbstractNode) => void,
 ) {
 	if (typeof onEnter !== "undefined") {
-		onEnter(node, parentSymbol);
+		onEnter(node);
 	}
 	for (const child of node.children ?? []) {
-		traverseForIndex(child, node.symbol, onEnter, onLeave);
+		traverseForIndex(child, onEnter, onLeave);
 	}
 	if (typeof onLeave !== "undefined") {
 		onLeave(node);
@@ -60,9 +59,8 @@ export class Indexer {
 
 		try {
 			const rootNode = new MarkdownParser().execute(content);
-			const symbolCreator = new SymbolCreator(relativePath);
-			const strategy = new IndexStrategy(index, relativePath, symbolCreator);
-			traverseForIndex(rootNode, "", strategy.onEnter, strategy.onLeave);
+			const strategy = new IndexStrategy(index, relativePath);
+			traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
 		} catch (error) {
 			console.error(error);
 		}
