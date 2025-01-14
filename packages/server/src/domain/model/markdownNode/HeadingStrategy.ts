@@ -2,8 +2,10 @@ import type { Heading } from "mdast";
 import { NodeStrategy } from "./NodeStrategy";
 
 export class HeadingStrategy extends NodeStrategy {
+	// 見出しテキスト = children が複雑なノードになることは少ないのでここで取得する？
 	onLeave(node: Heading) {
 		this.index.documents[this.relativePath].headings.push({
+			// TODO: 見出しテキストを取得する
 			text: "foooooo",
 			range: {
 				start: {
