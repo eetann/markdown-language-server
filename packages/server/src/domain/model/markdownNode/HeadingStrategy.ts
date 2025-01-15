@@ -1,12 +1,16 @@
 import type { Heading } from "mdast";
+import remarkStringify from "remark-stringify";
+import { unified } from "unified";
 import { NodeStrategy } from "./NodeStrategy";
 
 export class HeadingStrategy extends NodeStrategy {
-	// 見出しテキスト = children が複雑なノードになることは少ないのでここで取得する？
 	onLeave(node: Heading) {
+		const text = unified()
+			.use(remarkStringify)
+			.stringify({ type: "root", children: node.children })
+			.trimEnd();
 		this.index.documents[this.relativePath].headings.push({
-			// TODO: 見出しテキストを取得する
-			text: "foooooo",
+			text,
 			range: {
 				start: {
 					line: node.position.start.line - 1,

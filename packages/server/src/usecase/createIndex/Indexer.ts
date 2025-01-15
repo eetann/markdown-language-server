@@ -58,6 +58,7 @@ export class Indexer {
 		const content = readFileSync(absolutePath, "utf-8");
 
 		try {
+			// TODO: parserはDIにする
 			const rootNode = new MarkdownParser().execute(content);
 			const strategy = new IndexStrategy(index, relativePath);
 			traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
