@@ -13,7 +13,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		"node_modules",
 		"@eetann/markdown-language-server",
 		"dist",
-		"index.cjs",
+		"index.js",
 	);
 	const serverOptions: lsp.ServerOptions = {
 		run: {

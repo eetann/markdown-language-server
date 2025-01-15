@@ -58,9 +58,11 @@ export class Indexer {
 
 		try {
 			// TODO: parserはDIにする
+			console.log(relativePath);
 			const rootNode = new MarkdownParser().execute(content);
-			// const strategy = new IndexStrategy(index, relativePath);
-			// traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
+			console.log(rootNode);
+			const strategy = new IndexStrategy(index, relativePath);
+			traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
 		} catch (error) {
 			console.error(error);
 		}

@@ -2,8 +2,7 @@
 	"name": "@eetann/markdown-language-server",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.cjs",
-	"type": "module",
+	"main": "bin/markdown-language-server.cjs",
 	"bin": {
 		"markdown-language-server": "./bin/markdown-language-server.cjs"
 	},
@@ -29,7 +28,6 @@
 		"@volar/language-core": "^2.4.11",
 		"@volar/language-server": "^2.4.11",
 		"@volar/language-service": "^2.4.11",
-		"remark": "^15.0.1",
 		"remark-gfm": "^4.0.0",
 		"remark-parse": "^11.0.0",
 		"remark-stringify": "^11.0.0",
