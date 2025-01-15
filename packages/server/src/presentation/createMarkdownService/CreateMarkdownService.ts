@@ -8,7 +8,7 @@ export const createMarkdownService = (
 		capabilities: {
 			// textDocumentSyncはvolar側でIncrementalにしてるっぽい
 			completionProvider: {
-				triggerCharacters: ["$", "@"],
+				triggerCharacters: ["["],
 				resolveProvider: true,
 			},
 		},

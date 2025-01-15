@@ -15,7 +15,11 @@ export class CreateIndexUseCase {
 			withFileTypes: true,
 		});
 		for (const entry of entries) {
-			if (!entry.isFile() || !entry.name.endsWith(".md")) {
+			if (
+				entry.isDirectory() ||
+				!entry.name.endsWith(".md") ||
+				entry.parentPath.match("node_modules")
+			) {
 				continue;
 			}
 			const absolutePath = path.join(entry.parentPath, entry.name);

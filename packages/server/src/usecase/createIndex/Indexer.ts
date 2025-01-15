@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { Index } from "@/domain/model/IndexType";
-import { SymbolCreator } from "@/domain/model/SymbolCreator";
 import type { AbstractNode } from "@/domain/model/markdownNode/NodeStrategy";
 import { MarkdownParser } from "@/infrastructure/markdownParser/MarkdownParser";
 import { IndexStrategy } from "./IndexStrategy";
@@ -60,8 +59,8 @@ export class Indexer {
 		try {
 			// TODO: parserはDIにする
 			const rootNode = new MarkdownParser().execute(content);
-			const strategy = new IndexStrategy(index, relativePath);
-			traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
+			// const strategy = new IndexStrategy(index, relativePath);
+			// traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
 		} catch (error) {
 			console.error(error);
 		}

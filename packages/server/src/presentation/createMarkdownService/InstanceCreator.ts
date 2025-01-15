@@ -1,3 +1,5 @@
+import type { Index } from "@/domain/model/IndexType";
+import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import {
 	type Connection,
@@ -11,6 +13,7 @@ import {
 import { URI } from "vscode-uri";
 
 export class InstanceCreator {
+	private index: Index = { workspaceFolder: "", documents: {} };
 	constructor(private connection: Connection) {}
 
 	// Use arrow function to keep `this` in the defined scope
@@ -20,7 +23,7 @@ export class InstanceCreator {
 		this.initialize();
 		return {
 			provideCompletionItems: (...args) =>
-				new ProvideCompletionItemsUseCase().execute(...args),
+				new ProvideCompletionItemsUseCase(this.index).execute(...args),
 		};
 	};
 
@@ -30,6 +33,34 @@ export class InstanceCreator {
 		const progress = await this.connection.window.createWorkDoneProgress();
 		progress.begin("initializing...");
 
+		await this.createIndex();
+		this.onChange();
+
+		progress.done();
+		this.connection.sendNotification(ShowMessageNotification.type, {
+			type: MessageType.Info,
+			message: "Markdown Language Server initialized.",
+		});
+		console.debug("initialize end");
+	}
+
+	async getWorkspaceFolders() {
+		const workspaceFolders: string[] = [];
+		const folders =
+			(await this.connection.workspace.getWorkspaceFolders()) ?? [];
+		for (const folder of folders) {
+			workspaceFolders.push(URI.parse(folder.uri).fsPath);
+		}
+		return workspaceFolders;
+	}
+
+	async createIndex() {
+		const workspaceFolders = await this.getWorkspaceFolders();
+		// TODO: ワークスペースが複数あるときの対応
+		this.index = new CreateIndexUseCase().execute(workspaceFolders[0]);
+	}
+
+	onChange() {
 		this.connection.onNotification(
 			DidChangeWatchedFilesNotification.type,
 			(params) => {
@@ -50,22 +81,5 @@ export class InstanceCreator {
 				}
 			},
 		);
-
-		progress.done();
-		this.connection.sendNotification(ShowMessageNotification.type, {
-			type: MessageType.Info,
-			message: "Markdown Language Server initialized.",
-		});
-		console.debug("initialize end");
-	}
-
-	async getWorkspaceFolders() {
-		const workspaceFolders: string[] = [];
-		const folders =
-			(await this.connection.workspace.getWorkspaceFolders()) ?? [];
-		for (const folder of folders) {
-			workspaceFolders.push(URI.parse(folder.uri).fsPath);
-		}
-		return workspaceFolders;
 	}
 }
