@@ -2,7 +2,7 @@
 	"name": "@eetann/markdown-language-server",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "index.cjs",
 	"type": "module",
 	"bin": {
 		"markdown-language-server": "./bin/markdown-language-server.cjs"

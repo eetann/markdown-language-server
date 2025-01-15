@@ -13,10 +13,10 @@
 				"--disable-workspace-trust",
 				"--skip-release-notes",
 				"--skip-welcome",
-				"--extensionDevelopmentPath=${workspaceRoot}/packages/vscode"
+				"--extensionDevelopmentPath=${workspaceFolder}/packages/vscode"
 			],
 			"internalConsoleOptions": "openOnSessionStart",
-			"outFiles": ["${workspaceRoot}/packages/vscode/dist/*.js"]
+			"outFiles": ["${workspaceFolder}/packages/vscode/dist/*.js"]
 		}
 	]
 }

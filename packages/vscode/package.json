@@ -9,16 +9,15 @@
 		"format": "biome format",
 		"lint": "biome lint"
 	},
-	"activationEvents": [
-		"onLanguage:markdown"
-	],
+	"engines": {
+		"vscode": "^1.55.0"
+	},
+	"activationEvents": ["onLanguage:markdown"],
 	"contributes": {
 		"languages": [
 			{
 				"id": "markdown",
-				"extensions": [
-					".md"
-				]
+				"extensions": [".md"]
 			}
 		]
 	},

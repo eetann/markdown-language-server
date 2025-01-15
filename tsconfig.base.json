@@ -1,12 +1,6 @@
 {
   "compilerOptions": {
-    "skipLibCheck": true,
-    "target": "ESNext",
-    "lib": [
-      "ESNext"
-    ],
-    "module": "ESNext",
-    "moduleResolution": "Bundler"
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"
