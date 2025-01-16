@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"options": {
+		"cwd": "${workspaceFolder}/packages/vscode"
+	},
+	"tasks": [
+		{
+			"label": "Watch Vscode Extension",
+			"type": "shell",
+			"isBackground": true,
+			"command": "pnpm run watch",
+			"group": "build",
+			"problemMatcher": ["$tsc-watch"]
+		}
+	]
+}

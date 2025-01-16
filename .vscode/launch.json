@@ -16,6 +16,7 @@
 				"--extensionDevelopmentPath=${workspaceFolder}/packages/vscode"
 			],
 			"internalConsoleOptions": "openOnSessionStart",
+			"preLaunchTask": "Watch Vscode Extension",
 			"outFiles": ["${workspaceFolder}/packages/vscode/dist/*.js"]
 		}
 	]
