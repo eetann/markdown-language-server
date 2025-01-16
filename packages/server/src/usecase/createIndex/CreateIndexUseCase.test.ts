@@ -1,10 +1,14 @@
 import path from "node:path";
+import { MarkdownParser } from "@/infrastructure/markdownParser/MarkdownParser";
 import { CreateIndexUseCase } from "./CreateIndexUseCase";
 
 describe("CreateIndexUseCase", () => {
 	it("normal", () => {
 		const workspaceFolder = path.resolve("../sample/");
-		const index = new CreateIndexUseCase().execute(workspaceFolder);
+		const markdownParser = new MarkdownParser();
+		const index = new CreateIndexUseCase(markdownParser).execute(
+			workspaceFolder,
+		);
 
 		const grammarDocument = index.documents["grammar.md"];
 		expect(grammarDocument).not.toBeUndefined();

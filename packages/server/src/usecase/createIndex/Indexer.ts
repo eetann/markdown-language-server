@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { Index } from "@/domain/model/IndexType";
 import type { AbstractNode } from "@/domain/model/markdownNode/NodeStrategy";
-import { MarkdownParser } from "@/infrastructure/markdownParser/MarkdownParser";
+import type { IMarkdownParser } from "../shared/IMarkdownParser";
 import { IndexStrategy } from "./IndexStrategy";
 
 export function getPaths(
@@ -42,6 +42,8 @@ export function traverseForIndex(
 }
 
 export class Indexer {
+	constructor(private markdownParser: IMarkdownParser) {}
+
 	execute(
 		index: Index,
 		workspaceFolder: string,
@@ -57,10 +59,7 @@ export class Indexer {
 		const content = readFileSync(absolutePath, "utf-8");
 
 		try {
-			// TODO: parserはDIにする
-			console.log(relativePath);
-			const rootNode = new MarkdownParser().execute(content);
-			console.log(rootNode);
+			const rootNode = this.markdownParser.parse(content);
 			const strategy = new IndexStrategy(index, relativePath);
 			traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
 		} catch (error) {

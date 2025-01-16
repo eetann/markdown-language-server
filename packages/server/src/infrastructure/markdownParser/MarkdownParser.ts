@@ -4,7 +4,7 @@ import remarkParse from "remark-parse";
 import { unified } from "unified";
 
 export class MarkdownParser {
-	execute(text: string): Root {
+	parse(text: string): Root {
 		return unified().use(remarkParse).use(remarkGfm).parse(text);
 	}
 }

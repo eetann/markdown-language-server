@@ -6,9 +6,7 @@ import {
 } from "@volar/language-server";
 
 export class ProvideCompletionItemsUseCase {
-	constructor(private index: Index) {
-		console.log("ProvideCompletionItemsUseCase constructor");
-	}
+	constructor(private index: Index) {}
 
 	execute: LanguageServicePluginInstance["provideCompletionItems"] = (
 		textDocument,
@@ -16,7 +14,6 @@ export class ProvideCompletionItemsUseCase {
 		_completionContext,
 		token,
 	) => {
-		console.log("ProvideCompletionItemsUseCase execute");
 		if (token.isCancellationRequested) return null;
 		const items: CompletionItem[] = [];
 		items.push({

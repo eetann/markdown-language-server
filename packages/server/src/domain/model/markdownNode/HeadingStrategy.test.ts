@@ -1,10 +1,14 @@
 import path from "node:path";
+import { MarkdownParser } from "@/infrastructure/markdownParser/MarkdownParser";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 
 describe("HeadingStrategy.test", () => {
 	it("normal", () => {
 		const workspaceFolder = path.resolve("../sample/");
-		const index = new CreateIndexUseCase().execute(workspaceFolder);
+		const markdownParser = new MarkdownParser();
+		const index = new CreateIndexUseCase(markdownParser).execute(
+			workspaceFolder,
+		);
 
 		const headingsDocument = index.documents["headings.md"];
 		expect(headingsDocument.headings.length).toBe(9);

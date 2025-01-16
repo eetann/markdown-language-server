@@ -17,7 +17,7 @@ describe("MarkdownParser", () => {
 - List with hyphens
 + List with pluses
 `;
-		const result = parser.execute(content);
+		const result = parser.parse(content);
 		expect(result.type).toBe("root");
 	});
 });

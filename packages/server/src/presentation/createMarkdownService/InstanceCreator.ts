@@ -1,4 +1,5 @@
 import type { Index } from "@/domain/model/IndexType";
+import { MarkdownParser } from "@/infrastructure/markdownParser/MarkdownParser";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import {
@@ -55,9 +56,12 @@ export class InstanceCreator {
 	}
 
 	async createIndex() {
+		const markdownParser = new MarkdownParser();
 		const workspaceFolders = await this.getWorkspaceFolders();
 		// TODO: ワークスペースが複数あるときの対応
-		this.index = new CreateIndexUseCase().execute(workspaceFolders[0]);
+		this.index = new CreateIndexUseCase(markdownParser).execute(
+			workspaceFolders[0],
+		);
 	}
 
 	onChange() {
