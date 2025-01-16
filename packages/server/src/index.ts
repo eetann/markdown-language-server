@@ -21,5 +21,3 @@ connection.onInitialize((params) => {
 
 connection.onInitialized(server.initialized);
 connection.onShutdown(server.shutdown);
-
-export const viteNodeApp = connection;

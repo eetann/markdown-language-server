@@ -8,8 +8,8 @@
 		"markdown-language-server": "./bin/markdown-language-server.cjs"
 	},
 	"scripts": {
-		"watch": "vite build --watch",
-		"build": "tsc --noEmit && vite build",
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit && node esbuild.config.mjs production",
 		"test": "vitest",
 		"format": "biome format",
 		"lint": "biome lint"
@@ -21,8 +21,6 @@
 		"@types/mdast": "^4.0.4",
 		"@types/unist": "^3.0.3",
 		"esbuild": "0.24.2",
-		"vite": "^5.4.11",
-		"vite-plugin-node": "^4.0.0",
 		"vitest": "^2.1.8"
 	},
 	"dependencies": {
