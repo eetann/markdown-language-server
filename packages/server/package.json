@@ -20,7 +20,7 @@
 		"@types/mdast": "^4.0.4",
 		"@types/unist": "^3.0.3",
 		"esbuild": "0.24.2",
-		"vite": "^6.0.7",
+		"vite": "^5.4.11",
 		"vite-plugin-node": "^4.0.0",
 		"vitest": "^2.1.8"
 	},
