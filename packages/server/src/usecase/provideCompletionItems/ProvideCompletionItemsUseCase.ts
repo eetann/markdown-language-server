@@ -3,6 +3,7 @@ import {
 	type CompletionItem,
 	CompletionItemKind,
 	type LanguageServicePluginInstance,
+	Range,
 } from "@volar/language-server";
 
 export class ProvideCompletionItemsUseCase {
@@ -20,6 +21,9 @@ export class ProvideCompletionItemsUseCase {
 			label: "volar-test!",
 			kind: CompletionItemKind.Text,
 		});
+		const line = textDocument.getText(
+			Range.create(position.line, 0, position.line, Number.MAX_VALUE),
+		);
 		// TODO: リンク補完ができるのは条件付きにする
 		// TODO: ファイル名だけの補完
 		// TODO: ファイル名+タイトルの補完
