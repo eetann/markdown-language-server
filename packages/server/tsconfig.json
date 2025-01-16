@@ -2,10 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "target": "ESNext",
-    "lib": [
-      "ESNext"
-    ],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "baseUrl": "./",

@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "bin/markdown-language-server.cjs",
+	"type": "module",
 	"bin": {
 		"markdown-language-server": "./bin/markdown-language-server.cjs"
 	},
