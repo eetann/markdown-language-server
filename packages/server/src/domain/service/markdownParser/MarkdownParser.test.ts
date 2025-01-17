@@ -2,7 +2,7 @@ import type { Position as ZeroBasedPosition } from "vscode-languageserver-textdo
 import {
 	MarkdownParser,
 	type WikiLinkNode,
-	isWikiLink,
+	isWikiLinkNode,
 } from "./MarkdownParser";
 
 describe("MarkdownParser", () => {
@@ -37,7 +37,7 @@ describe("MarkdownParser", () => {
 		const content = "[[https://example.com|fooo]]";
 		const result = parser.parse(content);
 		const node = result.children[0].children[0];
-		expect(isWikiLink(node)).toBeTruthy();
+		expect(isWikiLinkNode(node)).toBeTruthy();
 		expect((node as WikiLinkNode).data.alias).toBe("fooo");
 	});
 
@@ -47,7 +47,7 @@ describe("MarkdownParser", () => {
 		const content = "![[foo.png]]";
 		const result = parser.parse(content);
 		const node = result.children[0].children[0];
-		expect(isWikiLink(node)).toBeTruthy();
+		expect(isWikiLinkNode(node)).toBeTruthy();
 		expect((node as WikiLinkNode).value).toBe("foo.png");
 	});
 

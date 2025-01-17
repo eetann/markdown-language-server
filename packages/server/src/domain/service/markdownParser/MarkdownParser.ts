@@ -1,5 +1,5 @@
 import type { IMarkdownParser } from "@/usecase/shared/IMarkdownParser";
-import type { Data, Literal, Node, Root } from "mdast";
+import type { Data, Literal, Node, Root, Text } from "mdast";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkWililink from "remark-wiki-link";
@@ -30,12 +30,16 @@ function isNode(target: unknown): target is Node {
 	return typeof target === "object" && target !== null && "type" in target;
 }
 
-function isLiteral(node: unknown): node is Literal {
+function isLiteralNode(node: unknown): node is Literal {
 	return isNode(node) && "value" in node;
 }
 
-export function isWikiLink(node: unknown): node is WikiLinkNode {
-	return isLiteral(node) && node.type === "wikiLink";
+export function isTextNode(node: unknown): node is Text {
+	return isLiteralNode(node) && node.type === "text";
+}
+
+export function isWikiLinkNode(node: unknown): node is WikiLinkNode {
+	return isLiteralNode(node) && node.type === "wikiLink";
 }
 
 export class MarkdownParser implements IMarkdownParser {
@@ -48,9 +52,9 @@ export class MarkdownParser implements IMarkdownParser {
 		return this.parser.parse(text);
 	}
 
-	getCurrentNode(text: string, position: ZeroBasedPosition): Node | undefined {
+	getCurrentNode(text: string, position: ZeroBasedPosition): Node {
 		const tree = this.parse(text);
-		let targetNode: Node | undefined = undefined;
+		let targetNode: Node = tree;
 		visit(tree, (node) => {
 			if (
 				node.position &&
