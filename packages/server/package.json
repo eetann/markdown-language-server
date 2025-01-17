@@ -27,10 +27,13 @@
 		"@volar/language-core": "^2.4.11",
 		"@volar/language-server": "^2.4.11",
 		"@volar/language-service": "^2.4.11",
+		"mdast-util-gfm": "^3.0.0",
+		"mdast-util-to-markdown": "^2.1.2",
 		"remark-gfm": "^4.0.0",
 		"remark-parse": "^11.0.0",
-		"remark-stringify": "^11.0.0",
 		"unified": "^11.0.5",
+		"unist-util-visit": "^5.0.0",
+		"vscode-languageserver-textdocument": "^1.0.12",
 		"vscode-uri": "^3.0.8"
 	}
 }

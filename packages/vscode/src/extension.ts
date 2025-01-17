@@ -43,9 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		serverOptions,
 		clientOptions,
 	);
-	console.log("before start");
 	await client.start();
-	console.log("after start");
 
 	// Needed code to add support for Volar Labs
 	// https://volarjs.dev/core-concepts/volar-labs/

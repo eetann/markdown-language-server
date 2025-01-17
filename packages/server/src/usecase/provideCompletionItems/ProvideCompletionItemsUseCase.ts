@@ -5,6 +5,10 @@ import {
 	type LanguageServicePluginInstance,
 	Range,
 } from "@volar/language-server";
+import type {
+	Position,
+	TextDocument,
+} from "vscode-languageserver-textdocument";
 
 export class ProvideCompletionItemsUseCase {
 	constructor(private index: Index) {}
@@ -21,25 +25,39 @@ export class ProvideCompletionItemsUseCase {
 			label: "volar-test!",
 			kind: CompletionItemKind.Text,
 		});
-		const line = textDocument.getText(
-			Range.create(position.line, 0, position.line, Number.MAX_VALUE),
-		);
-		// TODO: リンク補完ができるのは条件付きにする
-		// TODO: ファイル名だけの補完
-		// TODO: ファイル名+タイトルの補完
-		// TODO: ファイル名+タイトル+見出しの補完
-		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
-			console.log(relativePath);
-			items.push({
-				label: `[[${relativePath}]]`,
-				kind: CompletionItemKind.Text,
-			});
-			// for (const heading of doc.headings) {
-			// }
-		}
+		items.push(...this.createItems(textDocument, position));
 		return {
 			isIncomplete: false,
 			items: items,
 		};
 	};
+
+	createItems(
+		textDocument: TextDocument,
+		position: Position,
+	): CompletionItem[] {
+		const items: CompletionItem[] = [];
+		const line = textDocument.getText(
+			Range.create(position.line, 0, position.line + 1, 0),
+		);
+		// TODO: 正規表現だと2重を判定できない
+		const inSideWikilink = /\[\[([^\]]*)\]\]/;
+		if (!inSideWikilink.test(line)) {
+			return [];
+		}
+
+		// TODO: リンク補完ができるのは条件付きにする
+		// TODO: ファイル名だけの補完
+		// TODO: ファイル名+タイトルの補完
+		// TODO: ファイル名+タイトル+見出しの補完
+		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
+			items.push({
+				label: relativePath,
+				kind: CompletionItemKind.Text,
+			});
+			// for (const heading of doc.headings) {
+			// }
+		}
+		return items;
+	}
 }
