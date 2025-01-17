@@ -1,3 +1,4 @@
+import type { Position as ZeroBasedPosition } from "vscode-languageserver-textdocument";
 import {
 	MarkdownParser,
 	type WikiLinkNode,
@@ -41,11 +42,42 @@ describe("MarkdownParser", () => {
 	});
 
 	// TODO: パーサーを変更する必要がある
+	// ![[ ]] に対する補完や移動を実装する必要は無さそう？
 	it.todo("wikilink image", () => {
 		const content = "![[foo.png]]";
 		const result = parser.parse(content);
 		const node = result.children[0].children[0];
 		expect(isWikiLink(node)).toBeTruthy();
 		expect((node as WikiLinkNode).value).toBe("foo.png");
+	});
+
+	it("getCurrentNode", () => {
+		const content = "text [[https://example.com]] text";
+		// text node
+		const position: ZeroBasedPosition = {
+			line: 0,
+			character: 4,
+		};
+		let node = parser.getCurrentNode(content, position);
+		expect(node.type).toBe("text");
+		// wikiLink node
+		position.character = 5;
+		node = parser.getCurrentNode(content, position);
+		expect(node.type).toBe("wikiLink");
+	});
+
+	it("getCurrentNode before wikiLink is born", () => {
+		const content = "text [[]]";
+		// text node
+		const position: ZeroBasedPosition = {
+			line: 0,
+			character: 4,
+		};
+		let node = parser.getCurrentNode(content, position);
+		expect(node.type).toBe("text");
+		// [[]] is text node
+		position.character = 5;
+		node = parser.getCurrentNode(content, position);
+		expect(node.type).toBe("text");
 	});
 });
