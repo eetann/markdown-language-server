@@ -60,6 +60,7 @@ export class Indexer {
 
 		try {
 			const rootNode = this.markdownParser.parse(content);
+			// TODO: strategyじゃなくてunistのvisit使う
 			const strategy = new IndexStrategy(index, relativePath);
 			traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
 		} catch (error) {
