@@ -1,4 +1,3 @@
-import type { Index } from "@/domain/model/IndexType";
 import type { CancellationToken } from "@volar/language-service";
 import { vol } from "memfs";
 import { TextDocument } from "vscode-languageserver-textdocument";
