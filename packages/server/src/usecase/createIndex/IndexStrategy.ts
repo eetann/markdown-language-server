@@ -15,6 +15,7 @@ export class IndexStrategy extends NodeStrategy {
 		super(index, relativePath);
 		this.index.documents[relativePath] = {
 			headings: [],
+			title: "",
 		};
 
 		this.strategies = new Map();

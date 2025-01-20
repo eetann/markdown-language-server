@@ -4,6 +4,7 @@ import type { Index } from "@/domain/model/IndexType";
 import type { AbstractNode } from "@/domain/model/markdownNode/NodeStrategy";
 import { MarkdownParser } from "@/domain/service/markdownParser/MarkdownParser";
 import { IndexStrategy } from "./IndexStrategy";
+import { TitleExtractor } from "./TitleExtractor";
 
 export function getPaths(
 	workspaceFolder: string,
@@ -58,9 +59,9 @@ export class Indexer {
 
 		try {
 			const rootNode = new MarkdownParser().parse(content);
-			// TODO: strategyじゃなくてunistのvisit使う
 			const strategy = new IndexStrategy(index, relativePath);
 			traverseForIndex(rootNode, strategy.onEnter, strategy.onLeave);
+			new TitleExtractor().execute(index, relativePath, content);
 		} catch (error) {
 			console.error(error);
 		}

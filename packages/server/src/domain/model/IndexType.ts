@@ -5,6 +5,7 @@ export type Index = {
 	documents: {
 		[relativePath: string]: {
 			headings: Heading[];
+			title: string;
 		};
 	};
 };
