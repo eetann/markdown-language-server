@@ -49,13 +49,15 @@ export class ProvideCompletionItemsUseCase {
 			return items;
 		}
 
-		// TODO: タイトルを表示
 		// TODO: ファイル名+タイトルの補完
 		// TODO: ファイル名+タイトル+見出しの補完
 		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
+			const label = doc.title === "" ? relativePath : doc.title;
 			items.push({
-				label: relativePath,
-				kind: CompletionItemKind.Text,
+				label,
+				kind: CompletionItemKind.File,
+				insertText: relativePath,
+				detail: "File name only",
 			});
 			// for (const heading of doc.headings) {
 			// }
