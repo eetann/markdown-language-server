@@ -49,32 +49,7 @@ export class ProvideCompletionItemsUseCase {
 			return items;
 		}
 
-		console.log(textDocument.uri);
-		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
-			// TODO: titleのエスケープが必要であればやる
-			const label = doc.title === "" ? relativePath : doc.title;
-			items.push({
-				label,
-				kind: CompletionItemKind.File,
-				insertText: relativePath,
-				detail: "File name only",
-			});
-			items.push({
-				label,
-				kind: CompletionItemKind.Text,
-				insertText: `${relativePath}|${label}`,
-				detail: "File and Title",
-			});
-			for (const heading of doc.headings) {
-				// TODO: 現在開いているファイルなら、ファイル名を削る
-				items.push({
-					label: `${relativePath}#${heading.text}`,
-					kind: CompletionItemKind.Text,
-					insertText: `${relativePath}#${heading.text}|${heading.text}`,
-					detail: "File and Heading",
-				});
-			}
-		}
+		items.push(...this.provideWikilink());
 		return items;
 	}
 
@@ -101,5 +76,36 @@ export class ProvideCompletionItemsUseCase {
 			}
 		}
 		return false;
+	}
+
+	provideWikilink(): CompletionItem[] {
+		const items: CompletionItem[] = [];
+		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
+			// TODO: titleのエスケープが必要であればやる
+			const label = doc.title === "" ? relativePath : doc.title;
+			items.push({
+				label,
+				kind: CompletionItemKind.File,
+				insertText: relativePath,
+				detail: "File name only",
+			});
+			items.push({
+				label,
+				kind: CompletionItemKind.Text,
+				insertText: `${relativePath}|${label}`,
+				detail: "File and Title",
+			});
+			for (const heading of doc.headings) {
+				// TODO: 現在開いているファイルなら、ファイル名を削る
+				items.push({
+					label: `${relativePath}#${heading.text}`,
+					kind: CompletionItemKind.Text,
+					insertText: `${relativePath}#${heading.text}|${heading.text}`,
+					detail: "File and Heading",
+				});
+			}
+		}
+
+		return items;
 	}
 }
