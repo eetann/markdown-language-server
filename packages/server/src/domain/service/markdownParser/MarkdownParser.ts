@@ -1,4 +1,3 @@
-import type { IMarkdownParser } from "@/usecase/shared/IMarkdownParser";
 import type { Data, Literal, Node, Root, Text } from "mdast";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
@@ -42,7 +41,7 @@ export function isWikiLinkNode(node: unknown): node is WikiLinkNode {
 	return isLiteralNode(node) && node.type === "wikiLink";
 }
 
-export class MarkdownParser implements IMarkdownParser {
+export class MarkdownParser {
 	private parser = unified()
 		.use(remarkParse)
 		.use(remarkWililink, { aliasDivider: "|" })

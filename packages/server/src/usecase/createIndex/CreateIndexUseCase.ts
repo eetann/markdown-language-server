@@ -10,11 +10,11 @@ export class CreateIndexUseCase {
 			documents: {},
 		};
 
-		const entries = readdirSync(path.join(workspaceFolder), {
+		const entries = readdirSync(workspaceFolder, {
 			recursive: true,
 			withFileTypes: true,
 		});
-		for (const entry of entries) {
+		for (const entry of entries ?? []) {
 			if (
 				entry.isDirectory() ||
 				!entry.name.endsWith(".md") ||

@@ -17,7 +17,7 @@ import { URI } from "vscode-uri";
 import { getLineText } from "../shared/utils";
 
 export class ProvideDefinitionUseCase {
-	private markdownParser = new MarkdownParser();
+	markdownParser = new MarkdownParser();
 	constructor(private index: Index) {}
 
 	execute: LanguageServicePluginInstance["provideDefinition"] = (
