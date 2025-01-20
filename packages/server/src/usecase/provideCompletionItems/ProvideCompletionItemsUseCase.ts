@@ -13,6 +13,7 @@ import type {
 	TextDocument,
 	Position as ZeroBasedPosition,
 } from "vscode-languageserver-textdocument";
+import { getLineText } from "../shared/utils";
 
 export class ProvideCompletionItemsUseCase {
 	private markdownParser = new MarkdownParser();
@@ -42,9 +43,7 @@ export class ProvideCompletionItemsUseCase {
 		position: ZeroBasedPosition,
 	): CompletionItem[] {
 		const items: CompletionItem[] = [];
-		const lineText = textDocument.getText(
-			Range.create(position.line, 0, position.line + 1, 0),
-		);
+		const lineText = getLineText(textDocument, position);
 		if (!this.isShouldProvide(lineText, position)) {
 			return items;
 		}
@@ -57,8 +56,8 @@ export class ProvideCompletionItemsUseCase {
 		lineText: string,
 		cursorPosition: ZeroBasedPosition,
 	): boolean {
-		const position = { ...cursorPosition, line: 0 };
-		const node = this.markdownParser.getCurrentNode(lineText, position);
+		const oneLinePosition = { ...cursorPosition, line: 0 };
+		const node = this.markdownParser.getCurrentNode(lineText, oneLinePosition);
 
 		if (isTextNode(node)) {
 			const match = node.value.match(/\[\[/);
@@ -70,7 +69,8 @@ export class ProvideCompletionItemsUseCase {
 				//        ^ = 1 (1-base)
 				// index [[
 				//       ^ = 0 (0-base)
-				position.character + 1 === node.position.start.column + match.index + 2
+				oneLinePosition.character + 1 ===
+					node.position.start.column + match.index + 2
 			) {
 				return true;
 			}
