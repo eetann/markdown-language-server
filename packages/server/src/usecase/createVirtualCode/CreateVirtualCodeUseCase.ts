@@ -15,6 +15,7 @@ export class MarkdownVirtualCode implements VirtualCode {
 				lengths: [snapshot.getLength()],
 				data: {
 					completion: true,
+					navigation: true,
 				},
 			},
 		];

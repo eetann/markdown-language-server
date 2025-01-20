@@ -11,6 +11,7 @@ export const createMarkdownService = (
 				triggerCharacters: ["["],
 				resolveProvider: true,
 			},
+			definitionProvider: true,
 		},
 		create: new InstanceCreator(connection).execute,
 	};

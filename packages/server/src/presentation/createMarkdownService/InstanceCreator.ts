@@ -1,6 +1,7 @@
 import type { Index } from "@/domain/model/IndexType";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
+import { ProvideDefinitionUseCase } from "@/usecase/provideDefinition/ProvideDefinitionUseCase";
 import {
 	type Connection,
 	DidChangeWatchedFilesNotification,
@@ -20,10 +21,15 @@ export class InstanceCreator {
 	execute = (
 		_context: LanguageServiceContext,
 	): LanguageServicePluginInstance => {
+		console.log("Registering LanguageServicePluginInstance");
 		this.initialize();
+		// @volar/language-core の lib/editorFeatures.ts でフラグを確認する
+		// たとえば、VirtualCodeのmappings.data.navigationがtrueじゃないとprovideDefinitionは有効にならない
 		return {
 			provideCompletionItems: (...args) =>
 				new ProvideCompletionItemsUseCase(this.index).execute(...args),
+			provideDefinition: (...args) =>
+				new ProvideDefinitionUseCase(this.index).execute(...args),
 		};
 	};
 
