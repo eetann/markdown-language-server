@@ -1,9 +1,10 @@
 import path from "node:path";
-import { Range } from "@volar/language-server";
+import { type Connection, Range } from "@volar/language-server";
 import type {
 	TextDocument,
 	Position as ZeroBasedPosition,
 } from "vscode-languageserver-textdocument";
+import { URI } from "vscode-uri";
 
 export function getLineText(
 	textDocument: TextDocument,
@@ -24,4 +25,15 @@ export function extractRelativePath(
 		"",
 	);
 	return path.relative(workspaceFolder, absolutePath);
+}
+
+export async function getWorkspaceFolders(
+	connection: Connection,
+): Promise<string[]> {
+	const workspaceFolders: string[] = [];
+	const folders = (await connection.workspace.getWorkspaceFolders()) ?? [];
+	for (const folder of folders) {
+		workspaceFolders.push(URI.parse(folder.uri).fsPath);
+	}
+	return workspaceFolders;
 }

@@ -3,21 +3,24 @@ import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 import { ProvideCodeLenses } from "@/usecase/provideCodeLenses/ProvideCodeLenses";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import { ProvideDefinitionUseCase } from "@/usecase/provideDefinition/ProvideDefinitionUseCase";
+import type { CommandProvider } from "@/usecase/shared/CommandProvider";
+import { getWorkspaceFolders } from "@/usecase/shared/utils";
 import {
 	type Connection,
 	DidChangeWatchedFilesNotification,
-	type ExecuteCommandParams,
 	FileChangeType,
 	type LanguageServiceContext,
 	type LanguageServicePluginInstance,
 	MessageType,
 	ShowMessageNotification,
 } from "@volar/language-server";
-import { URI } from "vscode-uri";
 
 export class InstanceCreator {
 	private index: Index = { workspaceFolder: "", documents: {} };
-	constructor(private connection: Connection) {}
+	constructor(
+		private connection: Connection,
+		private commandProvider: CommandProvider,
+	) {}
 
 	// Use arrow function to keep `this` in the defined scope
 	execute = (
@@ -41,7 +44,7 @@ export class InstanceCreator {
 		const progress = await this.connection.window.createWorkDoneProgress();
 		progress.begin("initializing...");
 
-		this.onExecuteCommand();
+		this.commandProvider.onExecuteCommand();
 		await this.createIndex();
 		this.onChange();
 
@@ -53,18 +56,8 @@ export class InstanceCreator {
 		console.debug("initialize end");
 	}
 
-	async getWorkspaceFolders() {
-		const workspaceFolders: string[] = [];
-		const folders =
-			(await this.connection.workspace.getWorkspaceFolders()) ?? [];
-		for (const folder of folders) {
-			workspaceFolders.push(URI.parse(folder.uri).fsPath);
-		}
-		return workspaceFolders;
-	}
-
 	async createIndex() {
-		const workspaceFolders = await this.getWorkspaceFolders();
+		const workspaceFolders = await getWorkspaceFolders(this.connection);
 		// TODO: ワークスペースが複数あるときの対応
 		this.index = new CreateIndexUseCase().execute(workspaceFolders[0]);
 	}
@@ -89,23 +82,6 @@ export class InstanceCreator {
 					}
 				}
 			},
-		);
-	}
-
-	async executeCommand(params: ExecuteCommandParams) {
-		console.log(params);
-		const workspaceFolders = await this.getWorkspaceFolders();
-		const message = `workspaceFolders:\n${workspaceFolders.join("\n")}`;
-		this.connection.sendNotification(ShowMessageNotification.type, {
-			message,
-			type: MessageType.Info,
-		});
-		console.debug(workspaceFolders);
-	}
-
-	onExecuteCommand() {
-		this.connection.onExecuteCommand(
-			async (params) => await this.executeCommand(params),
 		);
 	}
 }

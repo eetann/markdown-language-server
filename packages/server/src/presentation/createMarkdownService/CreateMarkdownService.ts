@@ -1,10 +1,11 @@
-import { ProvideExecuteCommand } from "@/usecase/provideExecuteCommand/ProvideExecuteCommand";
+import { CommandProvider } from "@/usecase/shared/CommandProvider";
 import type { Connection, LanguageServicePlugin } from "@volar/language-server";
 import { InstanceCreator } from "./InstanceCreator";
 
 export const createMarkdownService = (
 	connection: Connection,
 ): LanguageServicePlugin => {
+	const commandProvider = new CommandProvider(connection);
 	return {
 		capabilities: {
 			// textDocumentSyncはvolar側でIncrementalにしてるっぽい
@@ -16,8 +17,8 @@ export const createMarkdownService = (
 			codeLensProvider: {
 				resolveProvider: false,
 			},
-			executeCommandProvider: ProvideExecuteCommand.provide(),
+			executeCommandProvider: commandProvider.getCommandKeys(),
 		},
-		create: new InstanceCreator(connection).execute,
+		create: new InstanceCreator(connection, commandProvider).execute,
 	};
 };
