@@ -57,9 +57,9 @@ export class MarkdownParser {
 		visit(tree, (node) => {
 			if (
 				node.position &&
-				position.line + 1 >= node.position.start.line &&
+				node.position.start.line <= position.line + 1 &&
+				node.position.start.column <= position.character + 1 &&
 				position.line + 1 <= node.position.end.line &&
-				position.character + 1 >= node.position.start.column &&
 				position.character + 1 <= node.position.end.column
 			) {
 				targetNode = node;

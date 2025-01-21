@@ -31,8 +31,7 @@ export class ProvideCompletionItemsUseCase {
 		// 	kind: CompletionItemKind.Text,
 		// });
 
-		const lineText = getLineText(textDocument, position);
-		if (this.isShouldProvide(lineText, position)) {
+		if (this.isShouldProvide(textDocument, position)) {
 			items.push(...this.provideWikilink(textDocument.uri));
 		}
 
@@ -43,11 +42,14 @@ export class ProvideCompletionItemsUseCase {
 	};
 
 	isShouldProvide(
-		lineText: string,
+		textDocument: TextDocument,
 		cursorPosition: ZeroBasedPosition,
 	): boolean {
-		const oneLinePosition = { ...cursorPosition, line: 0 };
-		const node = this.markdownParser.getCurrentNode(lineText, oneLinePosition);
+		const node = this.markdownParser.getCurrentNode(
+			textDocument.getText(),
+			cursorPosition,
+		);
+		console.log(node);
 
 		if (isTextNode(node)) {
 			const match = node.value.match(/\[\[/);
@@ -59,7 +61,7 @@ export class ProvideCompletionItemsUseCase {
 				//        ^ = 1 (1-base)
 				// index [[
 				//       ^ = 0 (0-base)
-				oneLinePosition.character + 1 ===
+				cursorPosition.character + 1 ===
 					node.position.start.column + match.index + 2
 			) {
 				return true;

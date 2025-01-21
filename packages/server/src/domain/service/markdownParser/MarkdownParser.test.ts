@@ -80,4 +80,17 @@ describe("MarkdownParser", () => {
 		node = parser.getCurrentNode(content, position);
 		expect(node.type).toBe("text");
 	});
+
+	it("getCurrentNode inside nested list", () => {
+		const content = "- foo\n    - [[]]";
+		// text node
+		const position: ZeroBasedPosition = {
+			line: 1,
+			character: 8,
+		};
+		const node = parser.getCurrentNode(content, position);
+		expect(node.type).toBe("text");
+		// @ts-ignore
+		expect(node.value).toBe("[[]]");
+	});
 });

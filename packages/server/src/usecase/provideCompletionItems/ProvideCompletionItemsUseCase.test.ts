@@ -22,33 +22,81 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 	const provider = new ProvideCompletionItemsUseCase(index);
 
 	it("provide after [[", () => {
-		const lineText = "foo [[ bar";
+		const textDocument = TextDocument.create(
+			"file:///workspace/foo.md",
+			"markdown",
+			1,
+			"foo [[ bar",
+		);
 		const position: ZeroBasedPosition = {
 			line: 0,
 			character: 6,
 		};
 		// foo [[@
-		expect(provider.isShouldProvide(lineText, position)).toBeTruthy();
+		expect(provider.isShouldProvide(textDocument, position)).toBeTruthy();
 		// foo [@[
 		position.character = 5;
-		expect(provider.isShouldProvide(lineText, position)).toBeFalsy();
+		expect(provider.isShouldProvide(textDocument, position)).toBeFalsy();
 	});
 
 	it("provide inside [[ and ]]", () => {
-		let lineText = "foo [[]]bar";
+		const textDocument = TextDocument.create(
+			"file:///workspace/foo.md",
+			"markdown",
+			1,
+			"foo [[]]bar",
+		);
 		// foo [[@]]bar
 		const position: ZeroBasedPosition = {
 			line: 0,
 			character: 6,
 		};
-		expect(provider.isShouldProvide(lineText, position)).toBeTruthy();
+		expect(provider.isShouldProvide(textDocument, position)).toBeTruthy();
 		// foo [[]@]bar
 		position.character = 7;
-		expect(provider.isShouldProvide(lineText, position)).toBeFalsy();
-		// [[@]]
-		lineText = "[[]]";
+		expect(provider.isShouldProvide(textDocument, position)).toBeFalsy();
+	});
+
+	it("provide inside list", () => {
+		const textDocument = TextDocument.create(
+			"file:///workspace/foo.md",
+			"markdown",
+			1,
+			"- [[]]",
+		);
+		// - [[@]]
+		const position: ZeroBasedPosition = {
+			line: 0,
+			character: 4,
+		};
+		expect(provider.isShouldProvide(textDocument, position)).toBeTruthy();
+		// - @[[]]
 		position.character = 2;
-		expect(provider.isShouldProvide(lineText, position)).toBeTruthy();
+		expect(provider.isShouldProvide(textDocument, position)).toBeFalsy();
+		// - [[]]@
+		position.character = 6;
+		expect(provider.isShouldProvide(textDocument, position)).toBeFalsy();
+	});
+
+	it("provide inside list with nest", () => {
+		const textDocument = TextDocument.create(
+			"file:///workspace/foo.md",
+			"markdown",
+			1,
+			"- foo\n    - [[]]",
+		);
+		// 0123- [[@]]
+		const position: ZeroBasedPosition = {
+			line: 1,
+			character: 4 + 4,
+		};
+		expect(provider.isShouldProvide(textDocument, position)).toBeTruthy();
+		// 0123- @[[]]
+		position.character = 4 + 2;
+		expect(provider.isShouldProvide(textDocument, position)).toBeFalsy();
+		// 0123- [[]]@
+		position.character = 4 + 6;
+		expect(provider.isShouldProvide(textDocument, position)).toBeFalsy();
 	});
 });
 
