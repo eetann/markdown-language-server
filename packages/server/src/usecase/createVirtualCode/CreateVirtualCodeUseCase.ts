@@ -14,8 +14,12 @@ export class MarkdownVirtualCode implements VirtualCode {
 				generatedOffsets: [0],
 				lengths: [snapshot.getLength()],
 				data: {
+					verrification: true,
 					completion: true,
+					semantic: true,
 					navigation: true,
+					structure: true,
+					format: true,
 				},
 			},
 		];

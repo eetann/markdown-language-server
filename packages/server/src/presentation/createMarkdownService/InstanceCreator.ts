@@ -1,10 +1,12 @@
 import type { Index } from "@/domain/model/IndexType";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
+import { ProvideCodeLenses } from "@/usecase/provideCodeLenses/ProvideCodeLenses";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import { ProvideDefinitionUseCase } from "@/usecase/provideDefinition/ProvideDefinitionUseCase";
 import {
 	type Connection,
 	DidChangeWatchedFilesNotification,
+	type ExecuteCommandParams,
 	FileChangeType,
 	type LanguageServiceContext,
 	type LanguageServicePluginInstance,
@@ -29,6 +31,7 @@ export class InstanceCreator {
 				new ProvideCompletionItemsUseCase(this.index).execute(...args),
 			provideDefinition: (...args) =>
 				new ProvideDefinitionUseCase(this.index).execute(...args),
+			provideCodeLenses: (...args) => new ProvideCodeLenses().execute(...args),
 		};
 	};
 
@@ -38,6 +41,7 @@ export class InstanceCreator {
 		const progress = await this.connection.window.createWorkDoneProgress();
 		progress.begin("initializing...");
 
+		this.onExecuteCommand();
 		await this.createIndex();
 		this.onChange();
 
@@ -85,6 +89,23 @@ export class InstanceCreator {
 					}
 				}
 			},
+		);
+	}
+
+	async executeCommand(params: ExecuteCommandParams) {
+		console.log(params);
+		const workspaceFolders = await this.getWorkspaceFolders();
+		const message = `workspaceFolders:\n${workspaceFolders.join("\n")}`;
+		this.connection.sendNotification(ShowMessageNotification.type, {
+			message,
+			type: MessageType.Info,
+		});
+		console.debug(workspaceFolders);
+	}
+
+	onExecuteCommand() {
+		this.connection.onExecuteCommand(
+			async (params) => await this.executeCommand(params),
 		);
 	}
 }
