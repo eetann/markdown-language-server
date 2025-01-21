@@ -12,7 +12,7 @@ import type {
 	TextDocument,
 	Position as ZeroBasedPosition,
 } from "vscode-languageserver-textdocument";
-import { getLineText } from "../shared/utils";
+import { extractRelativePath, getLineText } from "../shared/utils";
 
 export class ProvideCompletionItemsUseCase {
 	private markdownParser = new MarkdownParser();
@@ -26,30 +26,21 @@ export class ProvideCompletionItemsUseCase {
 	) => {
 		if (token.isCancellationRequested) return null;
 		const items: CompletionItem[] = [];
-		items.push({
-			label: "volar-test!",
-			kind: CompletionItemKind.Text,
-		});
-		items.push(...this.createItems(textDocument, position));
-		return {
-			isIncomplete: false,
-			items: items,
-		};
-	};
+		// items.push({
+		// 	label: "volar-test!",
+		// 	kind: CompletionItemKind.Text,
+		// });
 
-	createItems(
-		textDocument: TextDocument,
-		position: ZeroBasedPosition,
-	): CompletionItem[] {
-		const items: CompletionItem[] = [];
 		const lineText = getLineText(textDocument, position);
-		if (!this.isShouldProvide(lineText, position)) {
-			return items;
+		if (this.isShouldProvide(lineText, position)) {
+			items.push(...this.provideWikilink(textDocument.uri));
 		}
 
-		items.push(...this.provideWikilink());
-		return items;
-	}
+		return {
+			isIncomplete: false,
+			items,
+		};
+	};
 
 	isShouldProvide(
 		lineText: string,
@@ -77,7 +68,7 @@ export class ProvideCompletionItemsUseCase {
 		return false;
 	}
 
-	provideWikilink(): CompletionItem[] {
+	provideWikilink(currentUri: string): CompletionItem[] {
 		const items: CompletionItem[] = [];
 		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
 			// TODO: titleのエスケープが必要であればやる
@@ -96,16 +87,31 @@ export class ProvideCompletionItemsUseCase {
 				detail: "File and Title",
 				documentation: `${relativePath}|${label}`,
 			});
+			const currentRelativePath = extractRelativePath(
+				currentUri,
+				this.index.workspaceFolder,
+			);
+			const isCurrentFile = currentRelativePath === relativePath;
 			for (const heading of doc.headings) {
-				// TODO: 現在開いているファイルなら、ファイル名を削る
-				const insertText = `${relativePath}#${heading.text}|${heading.text}`;
-				items.push({
-					label: `${relativePath}#${heading.text}`,
-					kind: CompletionItemKind.Text,
-					insertText,
-					detail: "File and Heading",
-					documentation: insertText,
-				});
+				if (isCurrentFile) {
+					const label = `#${heading.text}`;
+					items.push({
+						label,
+						kind: CompletionItemKind.Text,
+						insertText: label,
+						detail: "Heading of this file",
+						documentation: label,
+					});
+				} else {
+					const insertText = `${relativePath}#${heading.text}|${heading.text}`;
+					items.push({
+						label: `${relativePath}#${heading.text}`,
+						kind: CompletionItemKind.Text,
+						insertText,
+						detail: "File and Heading",
+						documentation: insertText,
+					});
+				}
 			}
 		}
 
