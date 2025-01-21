@@ -6,13 +6,15 @@ import {
 } from "@volar/language-server";
 import { getWorkspaceFolders } from "./utils";
 
-const COMMAND_GET_WORKSPACEFOLDER = "get-workspacefolder";
+export const COMMAND_GET_WORKSPACEFOLDER = "get-workspacefolder";
 
 export class CommandProvider {
 	private commands: Record<string, (...args: unknown[]) => void>;
 	constructor(private connection: Connection) {
 		this.commands = {
-			[COMMAND_GET_WORKSPACEFOLDER]: () => {},
+			[COMMAND_GET_WORKSPACEFOLDER]: async () => {
+				this.getWorkspaceFolders();
+			},
 		};
 	}
 
@@ -21,15 +23,11 @@ export class CommandProvider {
 	}
 
 	async executeCommand(params: ExecuteCommandParams) {
-		switch (params.command) {
-			case COMMAND_GET_WORKSPACEFOLDER:
-				await this.getWorkspaceFolders();
-				break;
-
-			default:
-				console.log("called unknown command");
-				console.log(params.command);
-				break;
+		if (this.commands[params.command]) {
+			this.commands[params.command](...params.arguments);
+		} else {
+			console.log("called unknown command");
+			console.log(params.command);
 		}
 	}
 
