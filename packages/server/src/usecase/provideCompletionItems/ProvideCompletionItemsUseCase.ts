@@ -12,7 +12,7 @@ import type {
 	TextDocument,
 	Position as ZeroBasedPosition,
 } from "vscode-languageserver-textdocument";
-import { extractRelativePath, getLineText } from "../shared/utils";
+import { extractRelativePath } from "../shared/utils";
 
 export class ProvideCompletionItemsUseCase {
 	private markdownParser = new MarkdownParser();
@@ -49,7 +49,6 @@ export class ProvideCompletionItemsUseCase {
 			textDocument.getText(),
 			cursorPosition,
 		);
-		console.log(node);
 
 		if (isTextNode(node)) {
 			const match = node.value.match(/\[\[/);

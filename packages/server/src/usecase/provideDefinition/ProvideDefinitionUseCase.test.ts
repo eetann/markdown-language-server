@@ -26,6 +26,8 @@ describe("ProvideDefinitionUseCase", () => {
 [[bar.md|bar-title]]
 [[bar.md#bar-h2|bar-h2]]
 [[#Heading1]]
+- foo
+    - [[bar.md]]
 `;
 	const barContent = `\
 # bar-h1
@@ -157,6 +159,23 @@ describe("ProvideDefinitionUseCase", () => {
 				targetRange: {
 					start: { line: 0, character: 0 },
 					end: { line: 0, character: 10 },
+				},
+			}),
+		);
+	});
+
+	it("should provide definition for link inside nested list", () => {
+		const result = useCase.execute(
+			textDocument,
+			{ line: 9, character: 8 },
+			token,
+		);
+		expect(result[0]).toEqual(
+			expect.objectContaining({
+				targetUri: "file:///workspace/bar.md",
+				targetRange: {
+					start: { line: 0, character: 0 },
+					end: { line: 0, character: 0 },
 				},
 			}),
 		);

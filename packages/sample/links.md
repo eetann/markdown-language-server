@@ -13,7 +13,7 @@
 [[https://example.com|example link]] here.
 [[test.png|image text]]
 
-[[grammar.md|local note]]
-[[grammar.md#List|local note with heading]]
+- [[grammar.md|local note]]
+    - [[grammar.md#List|local note with heading]]
 
 [[#markdown link|current note heading]]

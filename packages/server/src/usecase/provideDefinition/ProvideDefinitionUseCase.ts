@@ -14,7 +14,7 @@ import type {
 	Position as ZeroBasedPosition,
 } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
-import { extractRelativePath, getLineText } from "../shared/utils";
+import { extractRelativePath } from "../shared/utils";
 
 export class ProvideDefinitionUseCase {
 	markdownParser = new MarkdownParser();
@@ -24,9 +24,11 @@ export class ProvideDefinitionUseCase {
 		textDocument: TextDocument,
 		cursorPosition: ZeroBasedPosition,
 	) => {
-		const lineText = getLineText(textDocument, cursorPosition);
-		const oneLinePosition = { ...cursorPosition, line: 0 };
-		const node = this.markdownParser.getCurrentNode(lineText, oneLinePosition);
+		const node = this.markdownParser.getCurrentNode(
+			textDocument.getText(),
+			cursorPosition,
+		);
+		console.log(node);
 
 		if (!isWikiLinkNode(node)) {
 			return [];
