@@ -25,13 +25,14 @@ describe("ProvideDefinitionUseCase", () => {
 [[bar.md#no-exist]]
 [[bar.md|bar-title]]
 [[bar.md#bar-h2|bar-h2]]
+[[#Heading1]]
 `;
 	const barContent = `\
 # bar-h1
 ## bar-h2
 `;
 	const textDocument = TextDocument.create(
-		"file:///workspace/file.md",
+		"file:///workspace/foo.md",
 		"markdown",
 		1,
 		fooContent,
@@ -139,6 +140,23 @@ describe("ProvideDefinitionUseCase", () => {
 				targetRange: {
 					start: { line: 1, character: 0 },
 					end: { line: 1, character: 9 },
+				},
+			}),
+		);
+	});
+
+	it("should provide definition for link with self heading", () => {
+		const result = useCase.execute(
+			textDocument,
+			{ line: 7, character: 0 },
+			token,
+		);
+		expect(result[0]).toEqual(
+			expect.objectContaining({
+				targetUri: "file:///workspace/foo.md",
+				targetRange: {
+					start: { line: 0, character: 0 },
+					end: { line: 0, character: 10 },
 				},
 			}),
 		);

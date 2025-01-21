@@ -20,7 +20,7 @@ export function extractRelativePath(
 ): string {
 	const decodedUri = decodeURIComponent(decodeURIComponent(uri));
 	const absolutePath = decodedUri.replace(
-		/^volar-embedded-content:\/\/root\/file:\/\//,
+		/^(volar-embedded-content:\/\/root\/)?file:\/\//,
 		"",
 	);
 	return path.relative(workspaceFolder, absolutePath);
