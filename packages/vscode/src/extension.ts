@@ -39,7 +39,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	// Create the language client with all the options we've defined, and start it.
 	client = new lsp.LanguageClient(
 		"markdown-language-server",
-		"Markdown Language Server",
+		"Markdown Language Server by eetann",
 		serverOptions,
 		clientOptions,
 	);

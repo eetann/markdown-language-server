@@ -19,7 +19,7 @@ configs["markdown-language-server"] = {
 	default_config = {
 		cmd = { "node", server_path .. "packages/server/bin/markdown-language-server.cjs", "--stdio" },
 		filetypes = { "markdown" },
-		root_dir = util.root_pattern(".git"),
+		root_dir = util.root_pattern("mdconfig.json5", ".git"),
 		settings = {},
 	},
 }
@@ -32,6 +32,7 @@ lspconfig["markdown-language-server"].setup{
 
 ```sh
 pnpm install
+cd packages/server/
 pnpm run build
 ```
 
@@ -44,7 +45,7 @@ cd packages/sample/
 ## VSCodeで動かす
 
 ```sh
-cd packages/vscode
+cd packages/vscode/
 pnpm run build
 ```
 このリポジトリをVSCodeで開いて、debug and runから`Launch Extension`。

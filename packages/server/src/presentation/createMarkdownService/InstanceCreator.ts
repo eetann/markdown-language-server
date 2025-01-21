@@ -21,7 +21,6 @@ export class InstanceCreator {
 	execute = (
 		_context: LanguageServiceContext,
 	): LanguageServicePluginInstance => {
-		console.log("Registering LanguageServicePluginInstance");
 		this.initialize();
 		// @volar/language-core の lib/editorFeatures.ts でフラグを確認する
 		// たとえば、VirtualCodeのmappings.data.navigationがtrueじゃないとprovideDefinitionは有効にならない
