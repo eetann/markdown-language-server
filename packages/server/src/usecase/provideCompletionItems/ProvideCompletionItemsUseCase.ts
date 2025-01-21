@@ -7,7 +7,6 @@ import {
 	type CompletionItem,
 	CompletionItemKind,
 	type LanguageServicePluginInstance,
-	Range,
 } from "@volar/language-server";
 import type {
 	TextDocument,
@@ -88,20 +87,24 @@ export class ProvideCompletionItemsUseCase {
 				kind: CompletionItemKind.File,
 				insertText: relativePath,
 				detail: "File name only",
+				documentation: relativePath,
 			});
 			items.push({
 				label,
 				kind: CompletionItemKind.Text,
 				insertText: `${relativePath}|${label}`,
 				detail: "File and Title",
+				documentation: `${relativePath}|${label}`,
 			});
 			for (const heading of doc.headings) {
 				// TODO: 現在開いているファイルなら、ファイル名を削る
+				const insertText = `${relativePath}#${heading.text}|${heading.text}`;
 				items.push({
 					label: `${relativePath}#${heading.text}`,
 					kind: CompletionItemKind.Text,
-					insertText: `${relativePath}#${heading.text}|${heading.text}`,
+					insertText,
 					detail: "File and Heading",
+					documentation: insertText,
 				});
 			}
 		}
