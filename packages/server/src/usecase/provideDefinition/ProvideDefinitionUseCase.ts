@@ -14,7 +14,7 @@ import type {
 	Position as ZeroBasedPosition,
 } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
-import { getLineText } from "../shared/utils";
+import { extractRelativePath, getLineText } from "../shared/utils";
 
 export class ProvideDefinitionUseCase {
 	markdownParser = new MarkdownParser();
@@ -57,10 +57,7 @@ export class ProvideDefinitionUseCase {
 		let targetUri = documentUri;
 		// 開いているファイルの場合は相対パスを取得
 		if (relativePath === "") {
-			relativePath = this.extractFileName(
-				targetUri,
-				this.index.workspaceFolder,
-			);
+			relativePath = extractRelativePath(targetUri, this.index.workspaceFolder);
 		} else {
 			const absolutePath = path.resolve(this.index.workspaceFolder, url);
 			targetUri = URI.file(absolutePath).toString();
@@ -85,19 +82,5 @@ export class ProvideDefinitionUseCase {
 			}
 		}
 		return range;
-	}
-
-	extractFileName(uri: string, workspaceFolder: string): string {
-		try {
-			const decodedUri = decodeURIComponent(decodeURIComponent(uri));
-			const absolutePath = decodedUri.replace(
-				/^volar-embedded-content:\/\/root\/file:\/\//,
-				"",
-			);
-			return path.relative(workspaceFolder, absolutePath);
-		} catch (error) {
-			console.error("Failed to extract file name:", error);
-		}
-		return "";
 	}
 }
