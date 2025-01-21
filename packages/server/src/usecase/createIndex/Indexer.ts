@@ -43,14 +43,9 @@ export function traverseForIndex(
 }
 
 export class Indexer {
-	execute(
-		index: Index,
-		workspaceFolder: string,
-		filePath: string,
-		isRelative: boolean,
-	) {
+	execute(index: Index, filePath: string, isRelative: boolean) {
 		const { relativePath, absolutePath } = getPaths(
-			workspaceFolder,
+			index.workspaceFolder,
 			filePath,
 			isRelative,
 		);

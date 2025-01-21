@@ -28,7 +28,6 @@ export class ProvideDefinitionUseCase {
 			textDocument.getText(),
 			cursorPosition,
 		);
-		console.log(node);
 
 		if (!isWikiLinkNode(node)) {
 			return [];
@@ -40,7 +39,7 @@ export class ProvideDefinitionUseCase {
 		}
 
 		const { relativePath, targetUri } = this.getPaths(url, textDocument.uri);
-		const doc = this.index.documents[relativePath];
+		const doc = this.index.getDocument(relativePath);
 		if (!doc) {
 			return [];
 		}

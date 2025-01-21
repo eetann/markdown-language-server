@@ -1,14 +1,11 @@
 import { readdirSync } from "node:fs";
 import path from "node:path";
-import type { Index } from "@/domain/model/IndexType";
+import { Index } from "@/domain/model/IndexType";
 import { Indexer } from "./Indexer";
 
 export class CreateIndexUseCase {
 	execute(workspaceFolder: string): Index {
-		const index: Index = {
-			workspaceFolder,
-			documents: {},
-		};
+		const index: Index = new Index(workspaceFolder);
 
 		const entries = readdirSync(workspaceFolder, {
 			recursive: true,
@@ -23,7 +20,7 @@ export class CreateIndexUseCase {
 				continue;
 			}
 			const absolutePath = path.join(entry.parentPath, entry.name);
-			new Indexer().execute(index, workspaceFolder, absolutePath, false);
+			new Indexer().execute(index, absolutePath, false);
 		}
 
 		return index;

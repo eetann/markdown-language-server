@@ -4,7 +4,7 @@ import { NodeStrategy } from "./NodeStrategy";
 
 export class HeadingStrategy extends NodeStrategy {
 	onLeave(node: Heading) {
-		this.index.documents[this.relativePath].headings.push({
+		this.index.addHeading(this.relativePath, {
 			text: toMarkdown({ type: "root", children: node.children }).trimEnd(),
 			range: {
 				start: {

@@ -27,6 +27,7 @@ export function extractRelativePath(
 	return path.relative(workspaceFolder, absolutePath);
 }
 
+// contextでも取得できるけどたぶんcommandから呼べない
 export async function getWorkspaceFolders(
 	connection: Connection,
 ): Promise<string[]> {

@@ -1,4 +1,4 @@
-import type { Index } from "@/domain/model/IndexType";
+import { Index } from "@/domain/model/IndexType";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 import { ProvideCodeLenses } from "@/usecase/provideCodeLenses/ProvideCodeLenses";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
@@ -16,7 +16,7 @@ import {
 } from "@volar/language-server";
 
 export class InstanceCreator {
-	private index: Index = { workspaceFolder: "", documents: {} };
+	private index: Index = new Index();
 	constructor(
 		private connection: Connection,
 		private commandProvider: CommandProvider,
@@ -24,8 +24,9 @@ export class InstanceCreator {
 
 	// Use arrow function to keep `this` in the defined scope
 	execute = (
-		_context: LanguageServiceContext,
+		context: LanguageServiceContext,
 	): LanguageServicePluginInstance => {
+		console.log(context.env.workspaceFolders);
 		this.initialize();
 		// @volar/language-core の lib/editorFeatures.ts でフラグを確認する
 		// たとえば、VirtualCodeのmappings.data.navigationがtrueじゃないとprovideDefinitionは有効にならない

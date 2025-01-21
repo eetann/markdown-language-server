@@ -10,9 +10,24 @@ export type IndexDocument = {
 	title: string;
 };
 
-export type Index = {
-	workspaceFolder: string;
+export class Index {
 	documents: {
 		[relativePath: string]: IndexDocument;
-	};
-};
+	} = {};
+	constructor(public workspaceFolder = "") {}
+
+	addDocument(relativePath: string): void {
+		this.documents[relativePath] = {
+			headings: [],
+			title: "",
+		};
+	}
+
+	getDocument(relativePath: string): IndexDocument | undefined {
+		return this.documents[relativePath];
+	}
+
+	addHeading(relativePath: string, heading: Heading) {
+		this.documents[relativePath].headings.push(heading);
+	}
+}

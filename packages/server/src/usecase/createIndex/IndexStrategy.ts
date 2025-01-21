@@ -13,10 +13,7 @@ export class IndexStrategy extends NodeStrategy {
 		relativePath: string,
 	) {
 		super(index, relativePath);
-		this.index.documents[relativePath] = {
-			headings: [],
-			title: "",
-		};
+		this.index.addDocument(relativePath);
 
 		this.strategies = new Map();
 		this.strategies.set("root", new NodeStrategy(index, relativePath));
