@@ -24,7 +24,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		debug: {
 			module: serverModule.fsPath,
 			transport: lsp.TransportKind.ipc,
-			options: { execArgv: ["--nolazy", `--inspect=${6009}`] },
+			options: {
+				execArgv: ["--nolazy", `--inspect=${6009}`, "--enable-source-maps"],
+			},
 		},
 	};
 
