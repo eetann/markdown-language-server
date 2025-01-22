@@ -13,28 +13,7 @@ import type {
 	Position as ZeroBasedPosition,
 } from "vscode-languageserver-textdocument";
 import { extractRelativePath } from "../shared/utils";
-
-// |                       | filename | heading | title | priority |
-// |-----------------------|----------|---------|-------|----------|
-// | foo.sm                | o        | x       | x     | 4        |
-// | foo.xs\|title         | o        | x       | o     | 0        |
-// | foo.xs#heading        | o        | o       | x     | 2        |
-// | foo.xs#heading\|title | o        | o       | o     | 1        |
-// | #heading              | x        | o       | x     | 3        |
-// | #heading\|title       | x        | o       | o     | 5        |
-export const Score = {
-	filename: 4,
-	filenameTitle: 0,
-	filenameHeading: 2,
-	filenameHeadingTitle: 1,
-	heading: 3,
-	headingTitle: 5,
-};
-type Score = (typeof Score)[keyof typeof Score];
-
-function getSortText(label: string, score: Score) {
-	return `${"_".repeat(score)}${label}`;
-}
+import { Score, calcOffset, getSortText } from "./utils";
 
 export class ProvideCompletionItemsUseCase {
 	private markdownParser = new MarkdownParser();
@@ -71,22 +50,18 @@ export class ProvideCompletionItemsUseCase {
 			textDocument.getText(),
 			cursorPosition,
 		);
+		console.log(node);
 
 		if (isTextNode(node)) {
-			const match = node.value.match(/\[\[/);
 			// [[の直後なら補完させる
+			const cursorOffset = calcOffset(node, cursorPosition);
 			if (
-				match?.index != null &&
-				// character 0[1[2 (0-base)
-				// column [[
-				//        ^ = 1 (1-base)
-				// index [[
-				//       ^ = 0 (0-base)
-				cursorPosition.character + 1 ===
-					node.position.start.column + match.index + 2
+				2 <= cursorOffset &&
+				node.value.slice(cursorOffset - 2, cursorOffset) === "[["
 			) {
 				return true;
 			}
+			console.log(`直後ではない: ${cursorOffset}`);
 		}
 		return false;
 	}
