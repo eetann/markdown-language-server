@@ -1,4 +1,5 @@
 import { Index } from "@/domain/model/IndexType";
+import { Indexer } from "@/infrastructure/indexer/Indexer";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 import { ProvideCodeLenses } from "@/usecase/provideCodeLenses/ProvideCodeLenses";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
@@ -14,9 +15,11 @@ import {
 	MessageType,
 	ShowMessageNotification,
 } from "@volar/language-server";
+import { URI } from "vscode-uri";
 
 export class InstanceCreator {
 	private index: Index = new Index();
+	private indexer = new Indexer();
 	constructor(
 		private connection: Connection,
 		private commandProvider: CommandProvider,
@@ -60,7 +63,9 @@ export class InstanceCreator {
 	async createIndex() {
 		const workspaceFolders = await getWorkspaceFolders(this.connection);
 		// TODO: ワークスペースが複数あるときの対応
-		this.index = new CreateIndexUseCase().execute(workspaceFolders[0]);
+		this.index = new CreateIndexUseCase(this.indexer).execute(
+			workspaceFolders[0],
+		);
 	}
 
 	onChange() {
@@ -68,15 +73,19 @@ export class InstanceCreator {
 			DidChangeWatchedFilesNotification.type,
 			(params) => {
 				for (const change of params.changes) {
+					const absolutePath = URI.parse(change.uri).fsPath;
 					switch (change.type) {
 						case FileChangeType.Created:
-							console.log(`File created: ${change.uri}`);
+							console.debug(`File created: ${absolutePath}`);
+							this.indexer.addDocument(this.index, absolutePath);
 							break;
 						case FileChangeType.Changed:
-							console.log(`File changed: ${change.uri}`);
+							console.debug(`File changed: ${absolutePath}`);
+							this.indexer.addDocument(this.index, absolutePath);
 							break;
 						case FileChangeType.Deleted:
-							console.log(`File deleted: ${change.uri}`);
+							console.debug(`File deleted: ${absolutePath}`);
+							this.indexer.deleteDocument(this.index, absolutePath);
 							break;
 						default:
 							break;

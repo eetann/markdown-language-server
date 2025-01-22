@@ -39,7 +39,9 @@ export class Indexer implements IIndexer {
 			console.error(error);
 		}
 	}
+
 	deleteDocument(index: Index, absolutePath: string): void {
-		throw new Error("Method not implemented.");
+		const relativePath = path.relative(index.workspaceFolder, absolutePath);
+		index.deleteDocument(relativePath);
 	}
 }

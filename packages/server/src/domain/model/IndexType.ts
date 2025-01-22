@@ -42,4 +42,8 @@ export class Index {
 
 		targetDoc.title = content.split("\n")[0] ?? "";
 	}
+
+	deleteDocument(relativePath: string) {
+		delete this.documents[relativePath];
+	}
 }
