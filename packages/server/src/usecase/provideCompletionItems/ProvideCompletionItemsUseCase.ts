@@ -14,6 +14,28 @@ import type {
 } from "vscode-languageserver-textdocument";
 import { extractRelativePath } from "../shared/utils";
 
+// |                       | filename | heading | title | priority |
+// |-----------------------|----------|---------|-------|----------|
+// | foo.sm                | o        | x       | x     | 4        |
+// | foo.xs\|title         | o        | x       | o     | 0        |
+// | foo.xs#heading        | o        | o       | x     | 2        |
+// | foo.xs#heading\|title | o        | o       | o     | 1        |
+// | #heading              | x        | o       | x     | 3        |
+// | #heading\|title       | x        | o       | o     | 5        |
+export const Score = {
+	filename: 4,
+	filenameTitle: 0,
+	filenameHeading: 2,
+	filenameHeadingTitle: 1,
+	heading: 3,
+	headingTitle: 5,
+};
+type Score = (typeof Score)[keyof typeof Score];
+
+function getSortText(label: string, score: Score) {
+	return `${"_".repeat(score)}${label}`;
+}
+
 export class ProvideCompletionItemsUseCase {
 	private markdownParser = new MarkdownParser();
 	constructor(private index: Index) {}
@@ -75,17 +97,19 @@ export class ProvideCompletionItemsUseCase {
 			// TODO: titleのエスケープが必要であればやる
 			const label = doc.title === "" ? relativePath : doc.title;
 			items.push({
-				label,
+				label: relativePath,
 				kind: CompletionItemKind.File,
 				insertText: relativePath,
 				detail: "File name only",
-				documentation: relativePath,
+				sortText: getSortText(relativePath, Score.filename),
+				documentation: label,
 			});
 			items.push({
 				label,
 				kind: CompletionItemKind.Text,
 				insertText: `${relativePath}|${label}`,
 				detail: "File and Title",
+				sortText: getSortText(label, Score.filenameTitle),
 				documentation: `${relativePath}|${label}`,
 			});
 			const currentRelativePath = extractRelativePath(
@@ -101,15 +125,18 @@ export class ProvideCompletionItemsUseCase {
 						kind: CompletionItemKind.Text,
 						insertText: label,
 						detail: "Heading of this file",
+						sortText: getSortText(label, Score.heading),
 						documentation: label,
 					});
 				} else {
+					const label = `${relativePath}#${heading.text}`;
 					const insertText = `${relativePath}#${heading.text}|${heading.text}`;
 					items.push({
-						label: `${relativePath}#${heading.text}`,
+						label,
 						kind: CompletionItemKind.Text,
 						insertText,
 						detail: "File and Heading",
+						sortText: getSortText(label, Score.filenameHeadingTitle),
 						documentation: insertText,
 					});
 				}
