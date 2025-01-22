@@ -5,6 +5,7 @@ import { ProvideCodeActionsUseCase } from "@/usecase/provideCodeActions/ProvideC
 import { ProvideCodeLensesUseCase } from "@/usecase/provideCodeLenses/ProvideCodeLensesUseCase";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import { ProvideDefinitionUseCase } from "@/usecase/provideDefinition/ProvideDefinitionUseCase";
+import { ProvideReferencesUseCase } from "@/usecase/provideReferences/ProvideReferencesUseCase";
 import type { CommandProvider } from "@/usecase/shared/CommandProvider";
 import { getWorkspaceFolders } from "@/usecase/shared/utils";
 import {
@@ -38,6 +39,8 @@ export class InstanceCreator {
 				new ProvideCompletionItemsUseCase(this.index).execute(...args),
 			provideDefinition: (...args) =>
 				new ProvideDefinitionUseCase(this.index).execute(...args),
+			provideReferences: (...args) =>
+				new ProvideReferencesUseCase(this.index).execute(...args),
 			provideCodeLenses: (...args) =>
 				new ProvideCodeLensesUseCase().execute(...args),
 			provideCodeActions: (...args) =>

@@ -27,6 +27,11 @@ export function extractRelativePath(
 	return path.relative(workspaceFolder, absolutePath);
 }
 
+export function extractUri(uri: string): string {
+	const decodedUri = decodeURIComponent(decodeURIComponent(uri));
+	return decodedUri.replace(/^volar-embedded-content:\/\/root\//, "");
+}
+
 // contextでも取得できるけどたぶんcommandから呼べない
 export async function getWorkspaceFolders(
 	connection: Connection,

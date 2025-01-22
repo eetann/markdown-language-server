@@ -1,5 +1,6 @@
 import type {
 	Location,
+	Range,
 	Range as ZeroBasedRange,
 } from "@volar/language-service";
 
@@ -8,7 +9,10 @@ export type Heading = {
 	range: ZeroBasedRange;
 };
 
-export type InternalLink = Location;
+export type InternalLink = {
+	targetUri: string;
+	linkNodeRage: Range;
+};
 
 export type IndexDocument = {
 	headings: Heading[];

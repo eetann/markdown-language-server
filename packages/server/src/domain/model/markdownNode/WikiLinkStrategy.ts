@@ -1,7 +1,6 @@
-import path from "node:path";
+import { getUriFromRelativePath } from "@/domain/shared/utils";
 import { Range } from "@volar/language-server";
 import type { Data, Literal } from "mdast";
-import { URI } from "vscode-uri";
 import { NodeStrategy } from "./NodeStrategy";
 
 interface WikiLinkHProperties {
@@ -26,11 +25,16 @@ export interface WikiLinkNode extends Literal {
 export class WikiLinkStrategy extends NodeStrategy {
 	onLeave(node: WikiLinkNode): void {
 		const url = node.value.split("#")[0];
-		const absolutePath = path.resolve(this.index.workspaceFolder, url);
-		const targetUri = URI.file(absolutePath).toString();
+		if (!url.endsWith(".md")) {
+			return;
+		}
+		const targetUri = getUriFromRelativePath(
+			this.index.workspaceFolder,
+			this.relativePath,
+		);
 		this.index.addInternalLinks(this.relativePath, {
-			uri: targetUri,
-			range: Range.create(
+			targetUri,
+			linkNodeRage: Range.create(
 				node.position.start.line - 1,
 				node.position.start.column - 1,
 				node.position.end.line - 1,

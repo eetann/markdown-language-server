@@ -18,6 +18,7 @@ export const createMarkdownService = (
 				resolveProvider: true,
 			},
 			definitionProvider: true,
+			referencesProvider: true,
 			codeLensProvider: {
 				resolveProvider: false,
 			},
