@@ -1,3 +1,4 @@
+import { Indexer } from "@/infrastructure/indexer/Indexer";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
 import { vol } from "memfs";
 
@@ -27,9 +28,10 @@ describe("HeadingStrategy.test", () => {
 `,
 	};
 	vol.fromJSON(json, workspaceFolder);
+	const indexer = new Indexer();
 
 	it("normal", () => {
-		const index = new CreateIndexUseCase().execute(workspaceFolder);
+		const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
 
 		const headingsDocument = index.documents["foo.md"];
 		expect(headingsDocument.headings.length).toBe(9);

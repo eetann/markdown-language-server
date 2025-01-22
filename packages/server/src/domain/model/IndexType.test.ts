@@ -1,11 +1,8 @@
-import type { Index } from "@/domain/model/IndexType";
-import { TitleExtractor } from "./TitleExtractor";
+import { Index } from "./IndexType";
 
-describe("TitleExtractor", () => {
-	const index: Index = {
-		workspaceFolder: "",
-		documents: {},
-	};
+describe("extractTitle", () => {
+	const workspaceFolder = "/workspace";
+	const index: Index = new Index(workspaceFolder);
 	const range = {
 		start: { line: 0, character: 0 },
 		end: { line: 0, character: 9 - 1 },
@@ -17,7 +14,7 @@ describe("TitleExtractor", () => {
 			headings: [{ text: "foo-title", range }],
 			title: "",
 		};
-		new TitleExtractor().execute(index, relativePath, "# foo-title\nbody");
+		index.extractTitle(relativePath, "# foo-title\nbody");
 		expect(index.documents[relativePath].title).toBe("foo-title");
 	});
 
@@ -26,11 +23,7 @@ describe("TitleExtractor", () => {
 			headings: [],
 			title: "",
 		};
-		new TitleExtractor().execute(
-			index,
-			relativePath,
-			"It's the text, but it's also the title.",
-		);
+		index.extractTitle(relativePath, "It's the text, but it's also the title.");
 		expect(index.documents[relativePath].title).toBe(
 			"It's the text, but it's also the title.",
 		);

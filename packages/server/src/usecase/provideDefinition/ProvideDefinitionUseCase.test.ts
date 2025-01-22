@@ -1,3 +1,4 @@
+import { Indexer } from "@/infrastructure/indexer/Indexer";
 import type { CancellationToken } from "@volar/language-service";
 import { vol } from "memfs";
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -46,7 +47,9 @@ describe("ProvideDefinitionUseCase", () => {
 		[`${workspaceFolder}/bar.md`]: barContent,
 	};
 	vol.fromJSON(json, workspaceFolder);
-	const index = new CreateIndexUseCase().execute(workspaceFolder);
+
+	const indexer = new Indexer();
+	const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
 	const useCase = new ProvideDefinitionUseCase(index);
 
 	it("should return empty array for a non-wiki link node", () => {

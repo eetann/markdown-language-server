@@ -1,4 +1,4 @@
-import type { Index } from "@/domain/model/IndexType";
+import { Indexer } from "@/infrastructure/indexer/Indexer";
 import { vol } from "memfs";
 import {
 	TextDocument,
@@ -15,15 +15,25 @@ vi.mock("fs", async () => {
 });
 
 describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
-	const index: Index = {
-		workspaceFolder: "",
-		documents: {},
+	const workspaceFolder = "/workspace";
+	const fooContent = `\
+# foo-h1
+## foo-h2
+`;
+
+	vol.reset();
+	const json = {
+		[`${workspaceFolder}/foo.md`]: fooContent,
 	};
+	vol.fromJSON(json, workspaceFolder);
+
+	const indexer = new Indexer();
+	const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
 	const provider = new ProvideCompletionItemsUseCase(index);
 
 	it("provide after [[", () => {
 		const textDocument = TextDocument.create(
-			"file:///workspace/foo.md",
+			`file://${workspaceFolder}/foo.md`,
 			"markdown",
 			1,
 			"foo [[ bar",
@@ -41,7 +51,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	it("provide inside [[ and ]]", () => {
 		const textDocument = TextDocument.create(
-			"file:///workspace/foo.md",
+			`file://${workspaceFolder}/foo.md`,
 			"markdown",
 			1,
 			"foo [[]]bar",
@@ -59,7 +69,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	it("provide inside list", () => {
 		const textDocument = TextDocument.create(
-			"file:///workspace/foo.md",
+			`file://${workspaceFolder}/foo.md`,
 			"markdown",
 			1,
 			"- [[]]",
@@ -80,7 +90,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	it("provide inside list with nest", () => {
 		const textDocument = TextDocument.create(
-			"file:///workspace/foo.md",
+			`file://${workspaceFolder}/foo.md`,
 			"markdown",
 			1,
 			"- foo\n    - [[]]",
@@ -118,7 +128,9 @@ describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
 		[`${workspaceFolder}/bar.md`]: barContent,
 	};
 	vol.fromJSON(json, workspaceFolder);
-	const index = new CreateIndexUseCase().execute(workspaceFolder);
+
+	const indexer = new Indexer();
+	const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
 	const useCase = new ProvideCompletionItemsUseCase(index);
 	const result = useCase.provideWikilink(currentUri);
 

@@ -1,9 +1,7 @@
-import type { Index } from "@/domain/model/IndexType";
-import { HeadingStrategy } from "@/domain/model/markdownNode/HeadingStrategy";
-import {
-	type AbstractNode,
-	NodeStrategy,
-} from "@/domain/model/markdownNode/NodeStrategy";
+import type { Node } from "mdast";
+import type { Index } from "../IndexType";
+import { HeadingStrategy } from "./HeadingStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 
 export class IndexStrategy extends NodeStrategy {
 	private strategies: Map<string, NodeStrategy>;
@@ -13,7 +11,7 @@ export class IndexStrategy extends NodeStrategy {
 		relativePath: string,
 	) {
 		super(index, relativePath);
-		this.index.addDocument(relativePath);
+		this.index.addOneDocument(relativePath);
 
 		this.strategies = new Map();
 		this.strategies.set("root", new NodeStrategy(index, relativePath));
@@ -21,11 +19,11 @@ export class IndexStrategy extends NodeStrategy {
 	}
 
 	// thisを固定するためにarrow functionを使う
-	onEnter = (node: AbstractNode) => {
+	onEnter = (node: Node) => {
 		this.strategies.get(node.type)?.onEnter(node);
 	};
 
-	onLeave = (node: AbstractNode) => {
+	onLeave = (node: Node) => {
 		this.strategies.get(node.type)?.onLeave(node);
 	};
 }

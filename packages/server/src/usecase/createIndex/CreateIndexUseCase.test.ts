@@ -1,3 +1,4 @@
+import { Indexer } from "@/infrastructure/indexer/Indexer";
 import { vol } from "memfs";
 import { CreateIndexUseCase } from "./CreateIndexUseCase";
 
@@ -39,11 +40,12 @@ This is the body text
 `,
 	};
 	vol.fromJSON(json, workspaceFolder);
+	const indexer = new Indexer();
 
 	it("normal", () => {
-		const index = new CreateIndexUseCase().execute(workspaceFolder);
+		const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
 
-		const doc = index.documents["foo.md"];
+		const doc = index.getDocument("foo.md");
 		expect(doc).not.toBeUndefined();
 		expect(doc.headings.length).not.toBe(0);
 		expect(doc.title).toBe("H1 Heading");
