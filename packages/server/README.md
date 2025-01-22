@@ -15,7 +15,4 @@ pnpm exec buf generate
 
 ### TODO
 
-- [x] VSCodeで開くリポジトリをsampleに変更
-- [x] 補完のサンプルを追加
-- [x] indexerの実装
-- [ ] 生意気な見出しを注意するサンプルのdiagnosticを追加
+- [ ] 現在のファイルへリンクしているノート一覧の取得

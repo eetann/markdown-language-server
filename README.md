@@ -1,6 +1,13 @@
 # markdown-language-server
 WIP
 
+- wikilink
+    - 補完(見出し付きのやつも追加)
+    - 作成(CodeAction経由で可能)
+    - 遷移
+        - カーソル位置のwikilinkのノートを開く
+        - 見出し付きも対応
+
 ## VSCodeでVolar Labsを動かす
 このリポジトリをVSCodeで開いて、debug and runから`Launch Extension`
 
