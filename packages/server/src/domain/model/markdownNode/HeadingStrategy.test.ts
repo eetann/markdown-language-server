@@ -9,7 +9,7 @@ vi.mock("fs", async () => {
 	return { default: memfs.fs, ...memfs.fs };
 });
 
-describe("HeadingStrategy.test", () => {
+describe("HeadingStrategy", () => {
 	const workspaceFolder = "/workspace";
 	vol.reset();
 
@@ -33,7 +33,7 @@ describe("HeadingStrategy.test", () => {
 	it("normal", () => {
 		const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
 
-		const headingsDocument = index.documents["foo.md"];
+		const headingsDocument = index.getDocument("foo.md");
 		expect(headingsDocument.headings.length).toBe(9);
 		expect(headingsDocument.headings).toContainEqual(
 			expect.objectContaining({

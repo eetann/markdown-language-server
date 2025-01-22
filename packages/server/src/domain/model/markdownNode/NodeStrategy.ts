@@ -7,13 +7,11 @@ declare module "mdast" {
 	}
 }
 
-export type AbstractNode = Node;
-
 export class NodeStrategy {
 	constructor(
 		protected index: Index,
 		protected relativePath: string,
 	) {}
-	onEnter(_node: AbstractNode): void {}
-	onLeave(_node: AbstractNode): void {}
+	onEnter(_node: Node): void {}
+	onLeave(_node: Node): void {}
 }

@@ -1,9 +1,6 @@
+import type { WikiLinkNode } from "@/domain/model/markdownNode/WikiLinkStrategy";
 import type { Position as ZeroBasedPosition } from "vscode-languageserver-textdocument";
-import {
-	MarkdownParser,
-	type WikiLinkNode,
-	isWikiLinkNode,
-} from "./MarkdownParser";
+import { MarkdownParser, isWikiLinkNode } from "./MarkdownParser";
 
 describe("MarkdownParser", () => {
 	const parser = new MarkdownParser();

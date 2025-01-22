@@ -1,29 +1,11 @@
-import type { Data, Literal, Node, Root, Text } from "mdast";
+import type { WikiLinkNode } from "@/domain/model/markdownNode/WikiLinkStrategy";
+import type { Literal, Node, Root, Text } from "mdast";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkWililink from "remark-wiki-link";
 import { unified } from "unified";
 import { CONTINUE, visit } from "unist-util-visit";
 import type { Position as ZeroBasedPosition } from "vscode-languageserver-textdocument";
-
-interface WikiLinkHProperties {
-	className: string;
-	href: string;
-	[key: string]: unknown;
-}
-
-interface WikiLinkData extends Data {
-	alias: string;
-	exists: boolean;
-	permalink: string;
-	hProperties: WikiLinkHProperties;
-	hChildren: Array<{ value: string }>;
-}
-
-export interface WikiLinkNode extends Literal {
-	type: "wikiLink";
-	data: WikiLinkData;
-}
 
 function isNode(target: unknown): target is Node {
 	return typeof target === "object" && target !== null && "type" in target;

@@ -13,6 +13,7 @@ describe("extractTitle", () => {
 		index.documents[relativePath] = {
 			headings: [{ text: "foo-title", range }],
 			title: "",
+			internalLinks: [],
 		};
 		index.extractTitle(relativePath, "# foo-title\nbody");
 		expect(index.documents[relativePath].title).toBe("foo-title");
@@ -22,6 +23,7 @@ describe("extractTitle", () => {
 		index.documents[relativePath] = {
 			headings: [],
 			title: "",
+			internalLinks: [],
 		};
 		index.extractTitle(relativePath, "It's the text, but it's also the title.");
 		expect(index.documents[relativePath].title).toBe(

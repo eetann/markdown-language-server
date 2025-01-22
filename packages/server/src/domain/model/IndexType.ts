@@ -1,13 +1,19 @@
-import type { Range as ZeroBasedRange } from "@volar/language-service";
+import type {
+	Location,
+	Range as ZeroBasedRange,
+} from "@volar/language-service";
 
 export type Heading = {
 	text: string;
 	range: ZeroBasedRange;
 };
 
+export type InternalLink = Location;
+
 export type IndexDocument = {
 	headings: Heading[];
 	title: string;
+	internalLinks: InternalLink[];
 };
 
 export class Index {
@@ -20,6 +26,7 @@ export class Index {
 		this.documents[relativePath] = {
 			headings: [],
 			title: "",
+			internalLinks: [],
 		};
 	}
 
@@ -29,6 +36,10 @@ export class Index {
 
 	addHeading(relativePath: string, heading: Heading) {
 		this.documents[relativePath].headings.push(heading);
+	}
+
+	addInternalLinks(relativePath: string, internalLink: InternalLink) {
+		this.documents[relativePath].internalLinks.push(internalLink);
 	}
 
 	extractTitle(relativePath: string, content: string): void {

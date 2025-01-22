@@ -2,6 +2,7 @@ import type { Node } from "mdast";
 import type { Index } from "../IndexType";
 import { HeadingStrategy } from "./HeadingStrategy";
 import { NodeStrategy } from "./NodeStrategy";
+import { WikiLinkStrategy } from "./WikiLinkStrategy";
 
 export class IndexStrategy extends NodeStrategy {
 	private strategies: Map<string, NodeStrategy>;
@@ -16,6 +17,7 @@ export class IndexStrategy extends NodeStrategy {
 		this.strategies = new Map();
 		this.strategies.set("root", new NodeStrategy(index, relativePath));
 		this.strategies.set("heading", new HeadingStrategy(index, relativePath));
+		this.strategies.set("wikiLink", new WikiLinkStrategy(index, relativePath));
 	}
 
 	// thisを固定するためにarrow functionを使う
