@@ -3,13 +3,11 @@ import { CodeActionKind, Range } from "@volar/language-server";
 import type {
 	CodeAction,
 	LanguageServicePluginInstance,
-	TextDocumentEdit,
-	TextEdit,
 } from "@volar/language-service";
 import type { TextDocument } from "vscode-languageserver-textdocument";
 import { extractRelativePath } from "../shared/utils";
 
-export class ProvideCodeActions {
+export class ProvideCodeActionsUseCase {
 	constructor(private index: Index) {}
 
 	execute: LanguageServicePluginInstance["provideCodeActions"] = (
@@ -19,33 +17,28 @@ export class ProvideCodeActions {
 		return [...this.actionCreateWikilink(textDocument, range)];
 	};
 
-	createWikilink(textDocument: TextDocument, cursorRange: Range): string {
+	getWikilinkElement(textDocument: TextDocument, cursorRange: Range) {
 		const relativePath = extractRelativePath(
 			textDocument.uri,
 			this.index.workspaceFolder,
 		);
-		let wikilink = "";
 		// foo
 		// ## target heading
 		// target line
 		// ## etc
 		const doc = this.index.getDocument(relativePath);
-		let url = relativePath;
 		const lastHeading: Heading | undefined = doc.headings.findLast(
 			(h) => h.range.end.line <= cursorRange.start.line,
 		);
+		let headingText = "";
 		if (lastHeading && lastHeading.text !== doc.title) {
-			// TODO: エスケープ
-			url += `#${lastHeading.text}`;
+			headingText = lastHeading.text;
 		}
-		if (doc.title === "") {
-			wikilink = `[[${url}]]`;
-		} else {
-			wikilink = `[[${url}|${doc.title}]]`;
-		}
-
-		wikilink += "\n";
-		return wikilink;
+		return {
+			relativePath,
+			headingText,
+			title: doc.title,
+		};
 	}
 
 	actionCreateWikilink(
@@ -55,27 +48,42 @@ export class ProvideCodeActions {
 		if (this.index.workspaceFolder === "") {
 			return [];
 		}
-		const textEdit: TextEdit = {
-			range: Range.create(
-				cursorRange.start.line + 1,
-				0,
-				cursorRange.start.line + 1,
-				0,
-			),
-			newText: this.createWikilink(textDocument, cursorRange),
-		};
-		const documentEdit: TextDocumentEdit = {
+		const codeActionList: CodeAction[] = [];
+		const { relativePath, headingText, title } = this.getWikilinkElement(
 			textDocument,
-			edits: [textEdit],
-		};
-		return [
-			{
-				title: "create wikilink based on cursor position",
+			cursorRange,
+		);
+		const range = Range.create(
+			cursorRange.start.line + 1,
+			0,
+			cursorRange.start.line + 1,
+			0,
+		);
+
+		const createCodeAction = (title: string, newText: string) => {
+			codeActionList.push({
+				title,
 				kind: CodeActionKind.RefactorRewrite,
 				edit: {
-					documentChanges: [documentEdit],
+					documentChanges: [{ textDocument, edits: [{ range, newText }] }],
 				},
-			},
-		];
+			});
+		};
+
+		if (title !== "") {
+			createCodeAction(
+				"create wikilink with title",
+				`[[${relativePath}|${title}]]\n`,
+			);
+			if (headingText !== "") {
+				createCodeAction(
+					"create wikilink with heading & title",
+					`[[${relativePath}#${headingText}|${title}]]\n`,
+				);
+			}
+		}
+		const newText = `[[${relativePath}]]\n`;
+		createCodeAction("create wikilink filename only", newText);
+		return codeActionList;
 	}
 }

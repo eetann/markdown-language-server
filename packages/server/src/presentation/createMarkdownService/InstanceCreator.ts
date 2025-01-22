@@ -1,8 +1,8 @@
 import { Index } from "@/domain/model/IndexType";
 import { Indexer } from "@/infrastructure/indexer/Indexer";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
-import { ProvideCodeActions } from "@/usecase/provideCodeActions/ProvideCodeActions";
-import { ProvideCodeLenses } from "@/usecase/provideCodeLenses/ProvideCodeLenses";
+import { ProvideCodeActionsUseCase } from "@/usecase/provideCodeActions/ProvideCodeActionsUseCase";
+import { ProvideCodeLensesUseCase } from "@/usecase/provideCodeLenses/ProvideCodeLensesUseCase";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import { ProvideDefinitionUseCase } from "@/usecase/provideDefinition/ProvideDefinitionUseCase";
 import type { CommandProvider } from "@/usecase/shared/CommandProvider";
@@ -38,9 +38,10 @@ export class InstanceCreator {
 				new ProvideCompletionItemsUseCase(this.index).execute(...args),
 			provideDefinition: (...args) =>
 				new ProvideDefinitionUseCase(this.index).execute(...args),
-			provideCodeLenses: (...args) => new ProvideCodeLenses().execute(...args),
+			provideCodeLenses: (...args) =>
+				new ProvideCodeLensesUseCase().execute(...args),
 			provideCodeActions: (...args) =>
-				new ProvideCodeActions(this.index).execute(...args),
+				new ProvideCodeActionsUseCase(this.index).execute(...args),
 		};
 	};
 

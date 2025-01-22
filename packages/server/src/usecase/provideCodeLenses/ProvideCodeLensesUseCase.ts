@@ -3,7 +3,7 @@ import type { LanguageServicePluginInstance } from "@volar/language-service";
 import type { TextDocument } from "vscode-languageserver-textdocument";
 import { COMMAND_GET_WORKSPACEFOLDER } from "../shared/CommandProvider";
 
-export class ProvideCodeLenses {
+export class ProvideCodeLensesUseCase {
 	execute: LanguageServicePluginInstance["provideCodeLenses"] = (
 		_textDocument: TextDocument,
 	) => {
