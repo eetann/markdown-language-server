@@ -50,7 +50,6 @@ export class ProvideCompletionItemsUseCase {
 			textDocument.getText(),
 			cursorPosition,
 		);
-		console.log(node);
 
 		if (isTextNode(node)) {
 			// [[の直後なら補完させる
@@ -61,7 +60,6 @@ export class ProvideCompletionItemsUseCase {
 			) {
 				return true;
 			}
-			console.log(`直後ではない: ${cursorOffset}`);
 		}
 		return false;
 	}

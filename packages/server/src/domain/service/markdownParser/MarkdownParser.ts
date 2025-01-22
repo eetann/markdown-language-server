@@ -55,12 +55,17 @@ export class MarkdownParser {
 		const tree = this.parse(text);
 		let targetNode: Node = tree;
 		visit(tree, (node) => {
+			if (!node.position) {
+				return CONTINUE;
+			}
+			const { start, end } = node.position;
 			if (
-				node.position &&
-				node.position.start.line <= position.line + 1 &&
-				node.position.start.column <= position.character + 1 &&
-				position.line + 1 <= node.position.end.line &&
-				position.character + 1 <= node.position.end.column
+				(start.line < position.line + 1 ||
+					(start.line === position.line + 1 &&
+						start.column <= position.character + 1)) &&
+				(position.line + 1 < end.line ||
+					(position.line + 1 === end.line &&
+						position.character + 1 <= end.column))
 			) {
 				targetNode = node;
 				return CONTINUE;

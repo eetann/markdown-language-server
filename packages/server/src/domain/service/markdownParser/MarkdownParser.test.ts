@@ -105,4 +105,16 @@ describe("MarkdownParser", () => {
 		// @ts-ignore
 		expect(node.value).toBe("foo\n[[]]");
 	});
+
+	it("getCurrentNode after link", () => {
+		const content = "[foo](https://example.com)\n[[]]";
+		const position: ZeroBasedPosition = {
+			line: 1,
+			character: 2,
+		};
+		const node = parser.getCurrentNode(content, position);
+		expect(node.type).toBe("text");
+		// @ts-ignore
+		expect(node.value).toBe("\n[[]]");
+	});
 });
