@@ -1,11 +1,11 @@
-import type { LanguagePlugin } from "@volar/language-server";
+import type { CodeMapping, LanguagePlugin } from "@volar/language-server";
 import type { VirtualCode } from "@volar/language-server";
 import type { IScriptSnapshot } from "typescript";
 
 export class MarkdownVirtualCode implements VirtualCode {
 	id = "root";
 	languageId = "markdown";
-	mappings = [];
+	mappings: CodeMapping[];
 
 	constructor(public snapshot: IScriptSnapshot) {
 		this.mappings = [
@@ -14,7 +14,7 @@ export class MarkdownVirtualCode implements VirtualCode {
 				generatedOffsets: [0],
 				lengths: [snapshot.getLength()],
 				data: {
-					verrification: true,
+					verification: true,
 					completion: true,
 					semantic: true,
 					navigation: true,

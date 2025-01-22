@@ -1,5 +1,9 @@
 import { CommandProvider } from "@/usecase/shared/CommandProvider";
-import type { Connection, LanguageServicePlugin } from "@volar/language-server";
+import {
+	CodeActionKind,
+	type Connection,
+	type LanguageServicePlugin,
+} from "@volar/language-server";
 import { InstanceCreator } from "./InstanceCreator";
 
 export const createMarkdownService = (
@@ -16,6 +20,9 @@ export const createMarkdownService = (
 			definitionProvider: true,
 			codeLensProvider: {
 				resolveProvider: false,
+			},
+			codeActionProvider: {
+				codeActionKinds: [CodeActionKind.RefactorRewrite],
 			},
 			executeCommandProvider: commandProvider.getCommandKeys(),
 		},
