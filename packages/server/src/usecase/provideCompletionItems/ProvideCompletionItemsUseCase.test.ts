@@ -108,6 +108,20 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 		position.character = 4 + 6;
 		expect(provider.isShouldProvide(textDocument, position)).toBeFalsy();
 	});
+
+	it("provide at second line of paragraph", () => {
+		const textDocument = TextDocument.create(
+			`file://${workspaceFolder}/foo.md`,
+			"markdown",
+			1,
+			"foo\n[[]]",
+		);
+		const position: ZeroBasedPosition = {
+			line: 1,
+			character: 2,
+		};
+		expect(provider.isShouldProvide(textDocument, position)).toBeTruthy();
+	});
 });
 
 describe("ProvideCompletionItemsUseCase.provideWikilink", () => {

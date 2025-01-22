@@ -93,4 +93,16 @@ describe("MarkdownParser", () => {
 		// @ts-ignore
 		expect(node.value).toBe("[[]]");
 	});
+
+	it("getCurrentNode inside new line", () => {
+		const content = "# title\nfoo\n[[]]";
+		const position: ZeroBasedPosition = {
+			line: 2,
+			character: 2,
+		};
+		const node = parser.getCurrentNode(content, position);
+		expect(node.type).toBe("text");
+		// @ts-ignore
+		expect(node.value).toBe("foo\n[[]]");
+	});
 });

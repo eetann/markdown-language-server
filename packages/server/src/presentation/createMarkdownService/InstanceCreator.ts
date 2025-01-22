@@ -27,9 +27,8 @@ export class InstanceCreator {
 
 	// Use arrow function to keep `this` in the defined scope
 	execute = (
-		context: LanguageServiceContext,
+		_context: LanguageServiceContext,
 	): LanguageServicePluginInstance => {
-		console.log(context.env.workspaceFolders);
 		this.initialize();
 		// @volar/language-core の lib/editorFeatures.ts でフラグを確認する
 		// たとえば、VirtualCodeのmappings.data.navigationがtrueじゃないとprovideDefinitionは有効にならない
