@@ -19,5 +19,8 @@ connection.onInitialize((params) => {
 	);
 });
 
-connection.onInitialized(server.initialized);
+connection.onInitialized(() => {
+	server.initialized();
+	server.fileWatcher.watchFiles(["**/*.md"]);
+});
 connection.onShutdown(server.shutdown);
