@@ -16,8 +16,8 @@ export function getLineText(
 }
 
 export function extractRelativePath(
-	uri: string,
 	workspaceFolder: string,
+	uri: string,
 ): string {
 	const decodedUri = decodeURIComponent(decodeURIComponent(uri));
 	const absolutePath = decodedUri.replace(

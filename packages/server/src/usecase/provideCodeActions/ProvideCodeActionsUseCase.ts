@@ -19,8 +19,8 @@ export class ProvideCodeActionsUseCase {
 
 	getWikilinkElement(textDocument: TextDocument, cursorRange: Range) {
 		const relativePath = extractRelativePath(
-			textDocument.uri,
 			this.index.workspaceFolder,
+			textDocument.uri,
 		);
 		// foo
 		// ## target heading

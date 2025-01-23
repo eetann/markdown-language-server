@@ -22,12 +22,21 @@ describe("getLineText", () => {
 });
 
 describe("extractRelativePath", () => {
-	it("should return the relative path from the workspace folder", () => {
+	it("with volar", () => {
+		const workspaceFolder = "/Users/foo/project";
 		const uri =
 			"volar-embedded-content://root/file:///Users/foo/project/file.ts";
-		const workspaceFolder = "/Users/foo/project";
 
-		const result = extractRelativePath(uri, workspaceFolder);
+		const result = extractRelativePath(workspaceFolder, uri);
+
+		expect(result).toBe("file.ts");
+	});
+
+	it("with out volar", () => {
+		const workspaceFolder = "/Users/foo/project";
+		const uri = "file:///Users/foo/project/file.ts";
+
+		const result = extractRelativePath(workspaceFolder, uri);
 
 		expect(result).toBe("file.ts");
 	});

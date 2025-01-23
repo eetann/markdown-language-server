@@ -86,8 +86,8 @@ export class ProvideCompletionItemsUseCase {
 				documentation: `${relativePath}|${label}`,
 			});
 			const currentRelativePath = extractRelativePath(
-				currentUri,
 				this.index.workspaceFolder,
+				currentUri,
 			);
 			const isCurrentFile = currentRelativePath === relativePath;
 			for (const heading of doc.headings) {

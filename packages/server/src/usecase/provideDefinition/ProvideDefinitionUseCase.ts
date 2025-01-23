@@ -58,7 +58,7 @@ export class ProvideDefinitionUseCase {
 		let targetUri = documentUri;
 		// 開いているファイルの場合は相対パスを取得
 		if (relativePath === "") {
-			relativePath = extractRelativePath(targetUri, this.index.workspaceFolder);
+			relativePath = extractRelativePath(this.index.workspaceFolder, targetUri);
 		} else {
 			const absolutePath = path.resolve(this.index.workspaceFolder, url);
 			targetUri = URI.file(absolutePath).toString();
