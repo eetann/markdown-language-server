@@ -32,11 +32,12 @@ describe("ProvideReferences", () => {
 			[`${workspaceFolder}/bar.md`]: barContent,
 		};
 		vol.fromJSON(json, workspaceFolder);
+
 		const indexer = new Indexer();
 		const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
 		const useCase = new ProvideReferencesUseCase(index);
 
-		it("normal", () => {
+		it("links to foo.md", () => {
 			const textDocument = TextDocument.create(
 				`${workspaceFolder}/foo.md`,
 				"markdown",
@@ -55,8 +56,36 @@ describe("ProvideReferences", () => {
 			// @ts-ignore
 			expect(locations.length).toBe(1);
 			expect(locations[0]).toEqual({
-				uri: `${workspaceFolder}/bar.md`,
+				uri: `file://${workspaceFolder}/bar.md`,
 				range: Range.create(1, 0, 1, 16),
+			});
+		});
+
+		it("links to bar.md", () => {
+			const textDocument = TextDocument.create(
+				`${workspaceFolder}/bar.md`,
+				"markdown",
+				1,
+				barContent,
+			);
+
+			const locations = useCase.execute(
+				textDocument,
+				{ line: 0, character: 0 },
+				{
+					includeDeclaration: false,
+				},
+				undefined,
+			);
+			// @ts-ignore
+			expect(locations.length).toBe(2);
+			expect(locations[0]).toEqual({
+				uri: `file://${workspaceFolder}/foo.md`,
+				range: Range.create(1, 0, 1, 10),
+			});
+			expect(locations[1]).toEqual({
+				uri: `file://${workspaceFolder}/foo.md`,
+				range: Range.create(2, 0, 2, 17),
 			});
 		});
 	});

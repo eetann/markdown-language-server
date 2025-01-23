@@ -32,17 +32,13 @@ describe("WikilinkStrategy", () => {
 
 		const fooDoc = index.getDocument("foo.md");
 		expect(fooDoc.internalLinks.length).toBe(2);
-		expect(fooDoc.internalLinks[0].targetUri).toEqual(
-			`file://${workspaceFolder}/foo.md`,
-		);
+		expect(fooDoc.internalLinks[0].relativePath).toEqual("bar.md");
 		// zero-based index
 		expect(fooDoc.internalLinks[0].linkNodeRage).toEqual({
 			start: { line: 1, character: 0 },
 			end: { line: 1, character: 10 },
 		});
-		expect(fooDoc.internalLinks[1].targetUri).toEqual(
-			`file://${workspaceFolder}/foo.md`,
-		);
+		expect(fooDoc.internalLinks[1].relativePath).toEqual("bar.md");
 		expect(fooDoc.internalLinks[1].linkNodeRage).toEqual({
 			start: { line: 2, character: 0 },
 			end: { line: 2, character: 17 },
@@ -50,9 +46,7 @@ describe("WikilinkStrategy", () => {
 
 		const barDoc = index.getDocument("bar.md");
 		expect(barDoc.internalLinks.length).toBe(1);
-		expect(barDoc.internalLinks[0].targetUri).toEqual(
-			`file://${workspaceFolder}/bar.md`,
-		);
+		expect(barDoc.internalLinks[0].relativePath).toEqual("foo.md");
 		expect(barDoc.internalLinks[0].linkNodeRage).toEqual({
 			start: { line: 1, character: 0 },
 			end: { line: 1, character: 16 },

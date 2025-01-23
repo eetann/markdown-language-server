@@ -5,7 +5,7 @@ import type {
 	Location,
 } from "@volar/language-service";
 import type { TextDocument } from "vscode-languageserver-textdocument";
-import { extractUri } from "../shared/utils";
+import { extractRelativePath } from "../shared/utils";
 
 export class ProvideReferencesUseCase {
 	constructor(private index: Index) {}
@@ -16,17 +16,20 @@ export class ProvideReferencesUseCase {
 		if (this.index.workspaceFolder === "") {
 			return [];
 		}
-		const currentUri = extractUri(textDocument.uri);
+
+		const currentRelativePath = extractRelativePath(
+			this.index.workspaceFolder,
+			textDocument.uri,
+		);
 		const locations: Location[] = [];
-		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
-			const linkNodeUri = getUriFromRelativePath(
-				this.index.workspaceFolder,
-				relativePath,
-			);
+		for (const [docRelativePath, doc] of Object.entries(this.index.documents)) {
 			for (const internalLink of doc.internalLinks) {
-				if (internalLink.targetUri === currentUri) {
+				if (internalLink.relativePath === currentRelativePath) {
 					locations.push({
-						uri: linkNodeUri,
+						uri: getUriFromRelativePath(
+							this.index.workspaceFolder,
+							docRelativePath,
+						),
 						range: internalLink.linkNodeRage,
 					});
 				}

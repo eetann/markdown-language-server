@@ -28,12 +28,8 @@ export class WikiLinkStrategy extends NodeStrategy {
 		if (!url.endsWith(".md")) {
 			return;
 		}
-		const targetUri = getUriFromRelativePath(
-			this.index.workspaceFolder,
-			this.relativePath,
-		);
 		this.index.addInternalLinks(this.relativePath, {
-			targetUri,
+			relativePath: url,
 			linkNodeRage: Range.create(
 				node.position.start.line - 1,
 				node.position.start.column - 1,
