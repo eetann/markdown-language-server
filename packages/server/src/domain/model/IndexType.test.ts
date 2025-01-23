@@ -19,6 +19,16 @@ describe("extractTitle", () => {
 		expect(index.documents[relativePath].title).toBe("foo-title");
 	});
 
+	it("heading after text", () => {
+		index.documents[relativePath] = {
+			headings: [{ text: "This is also the title", range }],
+			title: "",
+			internalLinks: [],
+		};
+		index.extractTitle(relativePath, "body\n# This is also the title");
+		expect(index.documents[relativePath].title).toBe("This is also the title");
+	});
+
 	it("no heading", () => {
 		index.documents[relativePath] = {
 			headings: [],
