@@ -52,7 +52,7 @@ export class InstanceCreator {
 		console.debug("initialize start");
 
 		const progress = await this.connection.window.createWorkDoneProgress();
-		progress.begin("initializing...");
+		progress.begin("Loading workspace");
 
 		this.commandProvider.onExecuteCommand();
 		await this.createIndex();
