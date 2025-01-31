@@ -28,6 +28,8 @@
 		"@volar/language-core": "^2.4.11",
 		"@volar/language-server": "^2.4.11",
 		"@volar/language-service": "^2.4.11",
+		"jsmigemo": "^0.4.8",
+		"json5": "^2.2.3",
 		"mdast-util-gfm": "^3.0.0",
 		"mdast-util-to-markdown": "^2.1.2",
 		"remark-gfm": "^4.0.0",

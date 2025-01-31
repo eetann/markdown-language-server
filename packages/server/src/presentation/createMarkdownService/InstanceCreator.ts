@@ -1,6 +1,8 @@
 import { Index } from "@/domain/model/IndexType";
+import { type Config, default_config } from "@/domain/model/config/Config";
 import { Indexer } from "@/infrastructure/indexer/Indexer";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
+import { LoadConfigUseCase } from "@/usecase/loadConfig/LoadConfigUseCase";
 import { ProvideCodeActionsUseCase } from "@/usecase/provideCodeActions/ProvideCodeActionsUseCase";
 import { ProvideCodeLensesUseCase } from "@/usecase/provideCodeLenses/ProvideCodeLensesUseCase";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
@@ -21,6 +23,7 @@ import { URI } from "vscode-uri";
 
 export class InstanceCreator {
 	private index: Index = new Index();
+	private config: Config = default_config;
 	private indexer = new Indexer();
 	constructor(
 		private connection: Connection,
@@ -55,7 +58,12 @@ export class InstanceCreator {
 		progress.begin("Loading workspace");
 
 		this.commandProvider.onExecuteCommand();
-		await this.createIndex();
+		const workspaceFolders = await getWorkspaceFolders(this.connection);
+		this.config = new LoadConfigUseCase().execute(workspaceFolders[0]);
+		this.index = new CreateIndexUseCase(this.indexer).execute(
+			workspaceFolders[0],
+		);
+
 		this.onChange();
 
 		progress.done();
@@ -64,14 +72,6 @@ export class InstanceCreator {
 			message: "Markdown Language Server initialized.",
 		});
 		console.debug("initialize end");
-	}
-
-	async createIndex() {
-		const workspaceFolders = await getWorkspaceFolders(this.connection);
-		// TODO: ワークスペースが複数あるときの対応
-		this.index = new CreateIndexUseCase(this.indexer).execute(
-			workspaceFolders[0],
-		);
 	}
 
 	onChange() {

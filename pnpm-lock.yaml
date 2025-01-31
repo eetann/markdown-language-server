@@ -29,6 +29,12 @@ importers:
       '@volar/language-service':
         specifier: ^2.4.11
         version: 2.4.11
+      jsmigemo:
+        specifier: ^0.4.8
+        version: 0.4.8
+      json5:
+        specifier: ^2.2.3
+        version: 2.2.3
       mdast-util-gfm:
         specifier: ^3.0.0
         version: 3.0.0
@@ -739,6 +745,15 @@ packages:
   is-plain-obj@4.1.0:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
     engines: {node: '>=12'}
+
+  jsmigemo@0.4.8:
+    resolution: {integrity: sha512-t9XdYQ9hZgFqChzp17XQHk0u1Vry5g7JFh3pTeG/8BmZG9tQ8SdwxOu/W6w5z9qqwBztbGsH903QbiJ/gRSWlQ==}
+    hasBin: true
+
+  json5@2.2.3:
+    resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
+    engines: {node: '>=6'}
+    hasBin: true
 
   longest-streak@2.0.4:
     resolution: {integrity: sha512-vM6rUVCVUJJt33bnmHiZEvr7wPT78ztX7rojL+LW51bHtLh6HTjx84LA5W4+oa6aKEJA7jJu5LR6vQRBpA5DVg==}
@@ -1620,6 +1635,10 @@ snapshots:
   is-hexadecimal@1.0.4: {}
 
   is-plain-obj@4.1.0: {}
+
+  jsmigemo@0.4.8: {}
+
+  json5@2.2.3: {}
 
   longest-streak@2.0.4: {}
 
