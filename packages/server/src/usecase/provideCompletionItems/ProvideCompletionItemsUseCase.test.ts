@@ -1,4 +1,5 @@
 import { Indexer } from "@/infrastructure/indexer/Indexer";
+import { CompactDictionary, CompactDictionaryBuilder, Migemo } from "jsmigemo";
 import { vol } from "memfs";
 import {
 	TextDocument,
@@ -13,6 +14,11 @@ vi.mock("fs", async () => {
 	// Support both `import fs from "fs"` and "import { readFileSync } from "fs"`
 	return { default: memfs.fs, ...memfs.fs };
 });
+
+const migemo = new Migemo();
+const dict = new Map();
+dict.set("kensaku", ["けんさく", "検索"]);
+migemo.setDict(new CompactDictionary(CompactDictionaryBuilder.build(dict)));
 
 describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 	const workspaceFolder = "/workspace";
@@ -29,7 +35,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	const indexer = new Indexer();
 	const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
-	const provider = new ProvideCompletionItemsUseCase(index);
+	const provider = new ProvideCompletionItemsUseCase(index, migemo);
 
 	it("provide after [[", () => {
 		const textDocument = TextDocument.create(
@@ -145,7 +151,7 @@ describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
 
 	const indexer = new Indexer();
 	const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
-	const useCase = new ProvideCompletionItemsUseCase(index);
+	const useCase = new ProvideCompletionItemsUseCase(index, migemo);
 	const result = useCase.provideWikilink(currentUri);
 
 	it("provide wikilink: file name only", () => {

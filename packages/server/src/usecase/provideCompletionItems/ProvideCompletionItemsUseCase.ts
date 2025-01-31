@@ -8,6 +8,7 @@ import {
 	CompletionItemKind,
 	type LanguageServicePluginInstance,
 } from "@volar/language-server";
+import type { Migemo } from "jsmigemo";
 import type {
 	TextDocument,
 	Position as ZeroBasedPosition,
@@ -17,7 +18,10 @@ import { Score, calcOffset, getSortText } from "./utils";
 
 export class ProvideCompletionItemsUseCase {
 	private markdownParser = new MarkdownParser();
-	constructor(private index: Index) {}
+	constructor(
+		private index: Index,
+		private migemo: Migemo,
+	) {}
 
 	execute: LanguageServicePluginInstance["provideCompletionItems"] = (
 		textDocument,
@@ -78,12 +82,15 @@ export class ProvideCompletionItemsUseCase {
 				documentation: `Title: ${label}`,
 			});
 			const insertText = `${relativePath}|${label}`;
+			// TODO: これだとやりたいことと逆なので要修正
+			// console.log(this.migemo.query(insertText));
 			items.push({
 				label: insertText,
 				kind: CompletionItemKind.Text,
 				insertText,
 				detail: "file.md|title",
 				sortText: getSortText(insertText, Score.filenameTitle),
+				// filterText: this.migemo.query(insertText),
 				documentation: insertText,
 			});
 			const currentRelativePath = extractRelativePath(

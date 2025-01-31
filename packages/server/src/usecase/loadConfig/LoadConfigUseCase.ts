@@ -1,7 +1,17 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { type Config, default_config } from "@/domain/model/config/Config";
+import { CompactDictionary, CompactDictionaryBuilder } from "jsmigemo";
 import JSON5 from "json5";
+
+export function getDict(migemo_path: string): CompactDictionary {
+	if (migemo_path === "") {
+		return new CompactDictionary(CompactDictionaryBuilder.build(new Map()));
+	}
+	const buffer = readFileSync(migemo_path);
+	// @ts-ignore
+	return new CompactDictionary(buffer.buffer);
+}
 
 export class LoadConfigUseCase {
 	execute(workspaceFolder: string): Config {
