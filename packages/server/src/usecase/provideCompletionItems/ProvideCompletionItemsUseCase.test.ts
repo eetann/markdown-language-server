@@ -51,7 +51,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	it("provide inside [[ and ]]", () => {
 		const textDocument = TextDocument.create(
-			`file://${workspaceFolder}/foo.md`,
+			`file://${workspaceFolder}/bar.md`,
 			"markdown",
 			1,
 			"foo [[]]bar",
@@ -69,7 +69,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	it("provide inside list", () => {
 		const textDocument = TextDocument.create(
-			`file://${workspaceFolder}/foo.md`,
+			`file://${workspaceFolder}/bar.md`,
 			"markdown",
 			1,
 			"- [[]]",
@@ -90,7 +90,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	it("provide inside list with nest", () => {
 		const textDocument = TextDocument.create(
-			`file://${workspaceFolder}/foo.md`,
+			`file://${workspaceFolder}/bar.md`,
 			"markdown",
 			1,
 			"- foo\n    - [[]]",
@@ -111,7 +111,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	it("provide at second line of paragraph", () => {
 		const textDocument = TextDocument.create(
-			`file://${workspaceFolder}/foo.md`,
+			`file://${workspaceFolder}/bar.md`,
 			"markdown",
 			1,
 			"foo\n[[]]",
