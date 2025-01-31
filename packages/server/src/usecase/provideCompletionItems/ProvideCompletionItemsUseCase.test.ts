@@ -153,8 +153,8 @@ describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
 			expect.objectContaining({
 				label: "foo.md",
 				insertText: "foo.md",
-				sortText: "____foo.md",
-				documentation: "foo-h1",
+				sortText: "4_foo.md",
+				documentation: "Title: foo-h1",
 			}),
 		);
 	});
@@ -162,9 +162,9 @@ describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
 	it("provide wikilink: file and title", () => {
 		expect(result).toContainEqual(
 			expect.objectContaining({
-				label: "foo-h1",
+				label: "foo.md|foo-h1",
 				insertText: "foo.md|foo-h1",
-				sortText: "foo-h1",
+				sortText: "0_foo.md|foo-h1",
 				documentation: "foo.md|foo-h1",
 			}),
 		);
@@ -175,7 +175,7 @@ describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
 			expect.objectContaining({
 				label: "#foo-h2",
 				insertText: "#foo-h2",
-				sortText: "___#foo-h2",
+				sortText: "2_#foo-h2",
 				documentation: "#foo-h2",
 			}),
 		);
@@ -186,7 +186,7 @@ describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
 			expect.objectContaining({
 				label: "bar.md#bar-h2",
 				insertText: "bar.md#bar-h2|bar-h2",
-				sortText: "_bar.md#bar-h2",
+				sortText: "1_bar.md#bar-h2",
 				documentation: "bar.md#bar-h2|bar-h2",
 			}),
 		);

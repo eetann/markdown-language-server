@@ -71,19 +71,20 @@ export class ProvideCompletionItemsUseCase {
 			const label = doc.title === "" ? relativePath : doc.title;
 			items.push({
 				label: relativePath,
-				kind: CompletionItemKind.File,
-				insertText: relativePath,
-				detail: "File name only",
-				sortText: getSortText(relativePath, Score.filename),
-				documentation: label,
-			});
-			items.push({
-				label,
 				kind: CompletionItemKind.Text,
-				insertText: `${relativePath}|${label}`,
-				detail: "File and Title",
-				sortText: getSortText(label, Score.filenameTitle),
-				documentation: `${relativePath}|${label}`,
+				insertText: relativePath,
+				detail: "file.md",
+				sortText: getSortText(relativePath, Score.filename),
+				documentation: `Title: ${label}`,
+			});
+			const insertText = `${relativePath}|${label}`;
+			items.push({
+				label: insertText,
+				kind: CompletionItemKind.Text,
+				insertText,
+				detail: "file.md|title",
+				sortText: getSortText(insertText, Score.filenameTitle),
+				documentation: insertText,
 			});
 			const currentRelativePath = extractRelativePath(
 				this.index.workspaceFolder,
@@ -97,7 +98,7 @@ export class ProvideCompletionItemsUseCase {
 						label,
 						kind: CompletionItemKind.Text,
 						insertText: label,
-						detail: "Heading of this file",
+						detail: "#heading-this-file",
 						sortText: getSortText(label, Score.heading),
 						documentation: label,
 					});
@@ -108,7 +109,7 @@ export class ProvideCompletionItemsUseCase {
 						label,
 						kind: CompletionItemKind.Text,
 						insertText,
-						detail: "File and Heading",
+						detail: "file.md#heading|title",
 						sortText: getSortText(label, Score.filenameHeadingTitle),
 						documentation: insertText,
 					});

@@ -1,25 +1,25 @@
 import type { Text } from "mdast";
 import type { Position as ZeroBasedPosition } from "vscode-languageserver-textdocument";
-// |                       | filename | heading | title | priority |
-// |-----------------------|----------|---------|-------|----------|
-// | foo.sm                | o        | x       | x     | 4        |
-// | foo.xs\|title         | o        | x       | o     | 0        |
-// | foo.xs#heading        | o        | o       | x     | 2        |
-// | foo.xs#heading\|title | o        | o       | o     | 1        |
-// | #heading              | x        | o       | x     | 3        |
-// | #heading\|title       | x        | o       | o     | 5        |
+// |                        | filename | heading | title | priority |
+// |------------------------|----------|---------|-------|----------|
+// | file.md\|title         | o        | x       | o     | 0        |
+// | file.md#heading\|title | o        | o       | o     | 1        |
+// | #heading               | x        | o       | x     | 2        |
+// | file.md#heading        | o        | o       | x     | 3        |
+// | file.md                | o        | x       | x     | 4        |
+// | #heading\|title        | x        | o       | o     | 5        |
 export const Score = {
-	filename: 4,
 	filenameTitle: 0,
-	filenameHeading: 2,
 	filenameHeadingTitle: 1,
-	heading: 3,
+	heading: 2,
+	filenameHeading: 3,
+	filename: 4,
 	headingTitle: 5,
 };
 type Score = (typeof Score)[keyof typeof Score];
 
 export function getSortText(label: string, score: Score) {
-	return `${"_".repeat(score)}${label}`;
+	return `${score}_${label}`;
 }
 
 export function calcOffset(
