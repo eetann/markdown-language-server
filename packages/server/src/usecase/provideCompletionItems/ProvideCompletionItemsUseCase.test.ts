@@ -1,5 +1,6 @@
 import { Indexer } from "@/infrastructure/indexer/Indexer";
-import { CompactDictionary, CompactDictionaryBuilder, Migemo } from "jsmigemo";
+import Kuroshiro from "kuroshiro";
+import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import { vol } from "memfs";
 import {
 	TextDocument,
@@ -15,12 +16,7 @@ vi.mock("fs", async () => {
 	return { default: memfs.fs, ...memfs.fs };
 });
 
-const migemo = new Migemo();
-const dict = new Map();
-dict.set("kensaku", ["けんさく", "検索"]);
-migemo.setDict(new CompactDictionary(CompactDictionaryBuilder.build(dict)));
-
-describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
+describe("ProvideCompletionItemsUseCase.isShouldProvide", async () => {
 	const workspaceFolder = "/workspace";
 	const fooContent = `\
 # foo-h1
@@ -35,7 +31,9 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 
 	const indexer = new Indexer();
 	const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
-	const provider = new ProvideCompletionItemsUseCase(index, migemo);
+	const kuroshiro = new Kuroshiro();
+	await kuroshiro.init(new KuromojiAnalyzer());
+	const provider = new ProvideCompletionItemsUseCase(index, kuroshiro);
 
 	it("provide after [[", () => {
 		const textDocument = TextDocument.create(
@@ -130,7 +128,7 @@ describe("ProvideCompletionItemsUseCase.isShouldProvide", () => {
 	});
 });
 
-describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
+describe("ProvideCompletionItemsUseCase.provideWikilink", async () => {
 	const workspaceFolder = "/workspace";
 	const fooContent = `\
 # foo-h1
@@ -151,8 +149,10 @@ describe("ProvideCompletionItemsUseCase.provideWikilink", () => {
 
 	const indexer = new Indexer();
 	const index = new CreateIndexUseCase(indexer).execute(workspaceFolder);
-	const useCase = new ProvideCompletionItemsUseCase(index, migemo);
-	const result = useCase.provideWikilink(currentUri);
+	const kuroshiro = new Kuroshiro();
+	await kuroshiro.init(new KuromojiAnalyzer());
+	const useCase = new ProvideCompletionItemsUseCase(index, kuroshiro);
+	const result = await useCase.provideWikilink(currentUri);
 
 	it("provide wikilink: file name only", () => {
 		expect(result).toContainEqual(

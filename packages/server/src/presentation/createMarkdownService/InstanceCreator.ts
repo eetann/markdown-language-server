@@ -2,10 +2,7 @@ import { Index } from "@/domain/model/IndexType";
 import { type Config, default_config } from "@/domain/model/config/Config";
 import { Indexer } from "@/infrastructure/indexer/Indexer";
 import { CreateIndexUseCase } from "@/usecase/createIndex/CreateIndexUseCase";
-import {
-	LoadConfigUseCase,
-	getDict,
-} from "@/usecase/loadConfig/LoadConfigUseCase";
+import { LoadConfigUseCase } from "@/usecase/loadConfig/LoadConfigUseCase";
 import { ProvideCodeActionsUseCase } from "@/usecase/provideCodeActions/ProvideCodeActionsUseCase";
 import { ProvideCodeLensesUseCase } from "@/usecase/provideCodeLenses/ProvideCodeLensesUseCase";
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
@@ -22,14 +19,16 @@ import {
 	MessageType,
 	ShowMessageNotification,
 } from "@volar/language-server";
-import { Migemo } from "jsmigemo";
+import Kuroshiro from "kuroshiro";
+import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import { URI } from "vscode-uri";
 
 export class InstanceCreator {
 	private index: Index = new Index();
+	private kuroshiro = new Kuroshiro();
 	private config: Config = default_config;
-	private migemo = new Migemo();
 	private indexer = new Indexer();
+	private isInitialized = false;
 	constructor(
 		private connection: Connection,
 		private commandProvider: CommandProvider,
@@ -43,10 +42,15 @@ export class InstanceCreator {
 		// @volar/language-core の lib/editorFeatures.ts でフラグを確認する
 		// たとえば、VirtualCodeのmappings.data.navigationがtrueじゃないとprovideDefinitionは有効にならない
 		return {
-			provideCompletionItems: (...args) =>
-				new ProvideCompletionItemsUseCase(this.index, this.migemo).execute(
-					...args,
-				),
+			provideCompletionItems: (...args) => {
+				if (!this.isInitialized) {
+					return { isIncomplete: false, items: [] };
+				}
+				return new ProvideCompletionItemsUseCase(
+					this.index,
+					this.kuroshiro,
+				).execute(...args);
+			},
 			provideDefinition: (...args) =>
 				new ProvideDefinitionUseCase(this.index).execute(...args),
 			provideReferences: (...args) =>
@@ -67,13 +71,14 @@ export class InstanceCreator {
 		this.commandProvider.onExecuteCommand();
 		const workspaceFolders = await getWorkspaceFolders(this.connection);
 		this.config = new LoadConfigUseCase().execute(workspaceFolders[0]);
-		this.migemo.setDict(getDict(this.config.migemo_path));
 		this.index = new CreateIndexUseCase(this.indexer).execute(
 			workspaceFolders[0],
 		);
+		await this.kuroshiro.init(new KuromojiAnalyzer());
 
 		this.onChange();
 
+		this.isInitialized = true;
 		progress.done();
 		this.connection.sendNotification(ShowMessageNotification.type, {
 			type: MessageType.Info,

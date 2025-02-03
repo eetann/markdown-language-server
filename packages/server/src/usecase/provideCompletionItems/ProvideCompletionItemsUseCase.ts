@@ -8,7 +8,7 @@ import {
 	CompletionItemKind,
 	type LanguageServicePluginInstance,
 } from "@volar/language-server";
-import type { Migemo } from "jsmigemo";
+import type Kuroshiro from "kuroshiro";
 import type {
 	TextDocument,
 	Position as ZeroBasedPosition,
@@ -20,10 +20,10 @@ export class ProvideCompletionItemsUseCase {
 	private markdownParser = new MarkdownParser();
 	constructor(
 		private index: Index,
-		private migemo: Migemo,
+		private kuroshiro: Kuroshiro,
 	) {}
 
-	execute: LanguageServicePluginInstance["provideCompletionItems"] = (
+	execute: LanguageServicePluginInstance["provideCompletionItems"] = async (
 		textDocument,
 		position,
 		_completionContext,
@@ -37,7 +37,8 @@ export class ProvideCompletionItemsUseCase {
 		// });
 
 		if (this.isShouldProvide(textDocument, position)) {
-			items.push(...this.provideWikilink(textDocument.uri));
+			const _items = await this.provideWikilink(textDocument.uri);
+			items.push(..._items);
 		}
 
 		return {
@@ -68,7 +69,7 @@ export class ProvideCompletionItemsUseCase {
 		return false;
 	}
 
-	provideWikilink(currentUri: string): CompletionItem[] {
+	async provideWikilink(currentUri: string): Promise<CompletionItem[]> {
 		const items: CompletionItem[] = [];
 		for (const [relativePath, doc] of Object.entries(this.index.documents)) {
 			// TODO: titleのエスケープが必要であればやる
@@ -82,15 +83,17 @@ export class ProvideCompletionItemsUseCase {
 				documentation: `Title: ${label}`,
 			});
 			const insertText = `${relativePath}|${label}`;
-			// TODO: これだとやりたいことと逆なので要修正
-			// console.log(this.migemo.query(insertText));
+			const filterText = await this.kuroshiro.convert(insertText, {
+				to: "romaji",
+				romajiSystem: "passport",
+			});
 			items.push({
 				label: insertText,
 				kind: CompletionItemKind.Text,
 				insertText,
 				detail: "file.md|title",
 				sortText: getSortText(insertText, Score.filenameTitle),
-				// filterText: this.migemo.query(insertText),
+				filterText,
 				documentation: insertText,
 			});
 			const currentRelativePath = extractRelativePath(
