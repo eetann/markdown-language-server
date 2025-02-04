@@ -8,3 +8,6 @@
 ## normal
 ## with [Link](https://example.com)
 ## with `inline codeblock`
+
+## 日本語の見出し
+This is Japanese heading.

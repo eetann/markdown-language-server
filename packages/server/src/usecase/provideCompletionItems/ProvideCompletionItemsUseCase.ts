@@ -83,10 +83,7 @@ export class ProvideCompletionItemsUseCase {
 				documentation: `Title: ${label}`,
 			});
 			const insertText = `${relativePath}|${label}`;
-			const filterText = await this.kuroshiro.convert(insertText, {
-				to: "romaji",
-				romajiSystem: "passport",
-			});
+			const filterText = await this.getFilterText(insertText);
 			items.push({
 				label: insertText,
 				kind: CompletionItemKind.Text,
@@ -115,12 +112,15 @@ export class ProvideCompletionItemsUseCase {
 				} else {
 					const label = `${relativePath}#${heading.text}`;
 					const insertText = `${relativePath}#${heading.text}|${heading.text}`;
+					// TODO: 途中からの検索はできない？
+					const filterText = await this.getFilterText(heading.text);
 					items.push({
 						label,
 						kind: CompletionItemKind.Text,
 						insertText,
 						detail: "file.md#heading|title",
 						sortText: getSortText(label, Score.filenameHeadingTitle),
+						filterText,
 						documentation: insertText,
 					});
 				}
@@ -128,5 +128,12 @@ export class ProvideCompletionItemsUseCase {
 		}
 
 		return items;
+	}
+
+	async getFilterText(text: string): Promise<string> {
+		return await this.kuroshiro.convert(text, {
+			to: "romaji",
+			romajiSystem: "passport",
+		});
 	}
 }
