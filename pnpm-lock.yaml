@@ -32,6 +32,9 @@ importers:
       json5:
         specifier: ^2.2.3
         version: 2.2.3
+      kuromoji:
+        specifier: ^0.1.2
+        version: 0.1.2
       kuroshiro:
         specifier: ^1.1.2
         version: 1.1.2

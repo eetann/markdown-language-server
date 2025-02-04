@@ -29,6 +29,7 @@
 		"@volar/language-server": "^2.4.11",
 		"@volar/language-service": "^2.4.11",
 		"json5": "^2.2.3",
+		"kuromoji": "^0.1.2",
 		"kuroshiro": "^1.1.2",
 		"kuroshiro-analyzer-kuromoji": "^1.1.0",
 		"mdast-util-gfm": "^3.0.0",
