@@ -33,7 +33,7 @@ export class ProvideCompletionItemsUseCase {
 		const items: CompletionItem[] = [];
 		// items.push({
 		// 	label: "volar-test!",
-		// 	kind: CompletionItemKind.Text,
+		// 	kind: CompletionItemKind.Value,
 		// });
 
 		if (this.isShouldProvide(textDocument, position)) {
@@ -76,7 +76,7 @@ export class ProvideCompletionItemsUseCase {
 			const label = doc.title === "" ? relativePath : doc.title;
 			items.push({
 				label: relativePath,
-				kind: CompletionItemKind.Text,
+				kind: CompletionItemKind.Value,
 				insertText: relativePath,
 				detail: "file.md",
 				sortText: getSortText(relativePath, Score.filename),
@@ -86,7 +86,7 @@ export class ProvideCompletionItemsUseCase {
 			const filterText = await this.getFilterText(insertText);
 			items.push({
 				label: insertText,
-				kind: CompletionItemKind.Text,
+				kind: CompletionItemKind.Value,
 				insertText,
 				detail: "file.md|title",
 				sortText: getSortText(insertText, Score.filenameTitle),
@@ -103,7 +103,7 @@ export class ProvideCompletionItemsUseCase {
 					const label = `#${heading.text}`;
 					items.push({
 						label,
-						kind: CompletionItemKind.Text,
+						kind: CompletionItemKind.Value,
 						insertText: label,
 						detail: "#heading-this-file",
 						sortText: getSortText(label, Score.heading),
@@ -116,7 +116,7 @@ export class ProvideCompletionItemsUseCase {
 					const filterText = await this.getFilterText(heading.text);
 					items.push({
 						label,
-						kind: CompletionItemKind.Text,
+						kind: CompletionItemKind.Value,
 						insertText,
 						detail: "file.md#heading|title",
 						sortText: getSortText(label, Score.filenameHeadingTitle),
